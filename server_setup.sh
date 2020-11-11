@@ -31,8 +31,6 @@ elif [ $1 -eq 'original' ]; then
 	echo 'To start random black player: cd TablutCompetition/Tablut && ant randomblack';
 	return 0;
 else
-	echo 'Cloning repo...';
-	git clone https://github.com/Danysan1/tablut-ai.git;
 	cd Tablut;
 
 	echo 'Compiling...';
