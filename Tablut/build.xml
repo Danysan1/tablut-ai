@@ -45,6 +45,23 @@
             </classpath>
         </java>
     </target>
+
+    <target name="tuichuwhite">
+        <java classname="edu.tuichu.TuichuWhiteClient" fork="true">
+            <classpath>
+                <pathelement location="lib/gson-2.2.2.jar"/>
+                <pathelement location="build"/>
+            </classpath>
+        </java>
+    </target>
+    <target name="tuichublack">
+        <java classname="edu.tuichu.TuichuBlackClient" fork="true">
+            <classpath>
+                <pathelement location="lib/gson-2.2.2.jar"/>
+                <pathelement location="build"/>
+            </classpath>
+        </java>
+    </target>
 	
     <target name="humanwhite">
         <java classname="it.unibo.ai.didattica.competition.tablut.client.TablutHumanWhiteClient" fork="true">

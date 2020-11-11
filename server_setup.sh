@@ -27,6 +27,8 @@ if [ $ret -eq 0 ]; then
 	echo 'To start the server:          cd TablutCompetition/Tablut && ant server';
 	echo 'To start random white player: cd TablutCompetition/Tablut && ant randomwhite';
 	echo 'To start random black player: cd TablutCompetition/Tablut && ant randomblack';
+	echo 'To start Tuichu white player: cd TablutCompetition/Tablut && ant tuichuwhite';
+	echo 'To start Tuichu black player: cd TablutCompetition/Tablut && ant tuichublack';
 	return 0;
 else
 	echo "ERROR: INSTALLATION FAILED WITH CODE $ret";
