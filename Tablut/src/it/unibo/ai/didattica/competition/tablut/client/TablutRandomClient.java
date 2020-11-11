@@ -129,6 +129,7 @@ public class TablutRandomClient extends TablutClient {
 			if (this.getPlayer().equals(Turn.WHITE)) {
 				// Mio turno
 				if (this.getCurrentState().getTurn().equals(StateTablut.Turn.WHITE)) {
+					//!! START OF PREPARATION -----------------------------------------------------------------------------------------
 					int[] buf;
 					for (int i = 0; i < state.getBoard().length; i++) {
 						for (int j = 0; j < state.getBoard().length; j++) {
@@ -157,6 +158,7 @@ public class TablutRandomClient extends TablutClient {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
+					//!! START OF THE CHOICE -----------------------------------------------------------------------------------------
 					while (!found) {
 						if (pawns.size() > 1) {
 							selected = pawns.get(new Random().nextInt(pawns.size() - 1));
@@ -183,6 +185,7 @@ public class TablutRandomClient extends TablutClient {
 
 						}
 
+						//!! END OF CHOICE FOR WHITE ------------------------------------------------------------------------------------
 					}
 
 					System.out.println("Mossa scelta: " + a.toString());
@@ -220,6 +223,7 @@ public class TablutRandomClient extends TablutClient {
 
 				// Mio turno
 				if (this.getCurrentState().getTurn().equals(StateTablut.Turn.BLACK)) {
+					//!! START OF PREPARATION FOR BLACK -----------------------------------------------------------------------------------------
 					int[] buf;
 					for (int i = 0; i < state.getBoard().length; i++) {
 						for (int j = 0; j < state.getBoard().length; j++) {
@@ -249,6 +253,7 @@ public class TablutRandomClient extends TablutClient {
 					}
 					;
 					while (!found) {
+						//!! START OF CHOICE FOR BLACK ------------------------------------------------------------------------------------
 						selected = pawns.get(new Random().nextInt(pawns.size() - 1));
 						String from = this.getCurrentState().getBox(selected[0], selected[1]);
 
@@ -270,6 +275,7 @@ public class TablutRandomClient extends TablutClient {
 
 						}
 
+						//!! END OF CHOICE FOR BLACK ------------------------------------------------------------------------------------
 					}
 
 					System.out.println("Mossa scelta: " + a.toString());
