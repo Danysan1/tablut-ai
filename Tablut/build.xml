@@ -47,7 +47,7 @@
     </target>
 
     <target name="tuichuwhite">
-        <java classname="edu.tuichu.TuichuWhiteClient" fork="true">
+        <java classname="edu.tuichu.TuichuTablutWhiteClient" fork="true">
             <classpath>
                 <pathelement location="lib/gson-2.2.2.jar"/>
                 <pathelement location="build"/>
@@ -55,7 +55,7 @@
         </java>
     </target>
     <target name="tuichublack">
-        <java classname="edu.tuichu.TuichuBlackClient" fork="true">
+        <java classname="edu.tuichu.TuichuTablutBlackClient" fork="true">
             <classpath>
                 <pathelement location="lib/gson-2.2.2.jar"/>
                 <pathelement location="build"/>
