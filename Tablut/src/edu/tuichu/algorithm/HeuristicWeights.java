@@ -3,14 +3,14 @@ package edu.tuichu.algorithm;
 import java.util.HashMap;
 
 /**
- * Singleton for default TuichuHeuristic weights.
+ * Singleton for TuichuHeuristic weights.
  * White is max, Black is min.
  */
-public class DefaultWeights extends HashMap<TuichuHeuristic.WeightType, Float> {
+public class HeuristicWeights extends HashMap<TuichuHeuristic.WeightType, Float> {
 	private static final long serialVersionUID = 1L;
-	private static DefaultWeights instance = null;
+	private static HeuristicWeights instance = null;
 	
-	private DefaultWeights() {
+	private HeuristicWeights() {
 		super();
 		Float pos = Float.valueOf(1),
 			neg = Float.valueOf(-1),
@@ -34,9 +34,9 @@ public class DefaultWeights extends HashMap<TuichuHeuristic.WeightType, Float> {
 		this.put(TuichuHeuristic.WeightType.BLACK_PAWNS_IN_KINGS_COLUMN, neg);
 	}
 	
-	public static DefaultWeights getInstance() {
+	public static HeuristicWeights getInstance() {
 		if(instance == null)
-			instance = new DefaultWeights();
+			instance = new HeuristicWeights();
 		
 		return instance;
 	}
