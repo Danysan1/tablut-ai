@@ -4,9 +4,17 @@ import it.unibo.ai.didattica.competition.tablut.domain.State;
 import it.unibo.ai.didattica.competition.tablut.domain.State.Turn;
 
 public class TuichuHeuristic implements TablutHeuristic {
+	/*protected Turn maxPlayer;
+	
+	public TuichuHeuristic(Turn maxPlayer) {
+		if(maxPlayer.equals(Turn.WHITE) || maxPlayer.equals(Turn.BLACK))
+			this.maxPlayer = maxPlayer;
+		else
+			throw new IllegalArgumentException("Invalid maxPlayer");
+	}*/
 
 	@Override
-	public float getValue(State state, Turn player) {
+	public float getValue(State state) {
 		// TODO To be implemented
 		return 0;
 	}

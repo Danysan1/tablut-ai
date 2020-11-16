@@ -1,8 +1,13 @@
 package edu.tuichu.algorithm;
 
 import it.unibo.ai.didattica.competition.tablut.domain.State;
-import it.unibo.ai.didattica.competition.tablut.domain.State.Turn;
 
 public interface TablutHeuristic {
-	public float getValue(State state, Turn player);
+	/**
+	 * Get the heuristic value for a given state
+	 * 
+	 * @param state The current state
+	 * @return The heuristic value
+	 */
+	public float getValue(State state);
 }
