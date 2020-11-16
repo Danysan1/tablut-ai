@@ -1,4 +1,4 @@
-package edu.tuichu.algorithm;
+package edu.tuichu.heuristic;
 
 import it.unibo.ai.didattica.competition.tablut.domain.State;
 
