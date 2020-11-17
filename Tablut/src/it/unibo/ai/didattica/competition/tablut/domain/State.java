@@ -176,7 +176,7 @@ public abstract class State {
 		int x=0, y=0;
                 for(int i=0; i<9; i++) {
                         for(int j=0; j<9; j++) {
-                                if(state.getPawn(i, j).equals(Pawn.KING)) {
+                                if(this.getPawn(i, j).equals(Pawn.KING)) {
                                         x = i;
                                         y = j;
                                         break;
