@@ -88,14 +88,9 @@ public class TuichuHeuristic extends WeightedHeuristic {
 
 	protected int getPawnsInWinCells(Pawn playerOwningThePawns, State state) {
 		int count = 0;
-		for(int i=1; i<8; i++) {
-			if( //shouldn't winningpos be 16 different places of the board?
-				state.getPawn(0, i).equals(playerOwningThePawns) ||
-				state.getPawn(8, i).equals(playerOwningThePawns) ||
-				state.getPawn(i, 0).equals(playerOwningThePawns) ||
-				state.getPawn(i, 8).equals(playerOwningThePawns)
-			) count++;
-		}
+		for(Pawn pawn : state.getPawnsInWinCells())
+			if(pawn.equals(playerOwningThePawns))
+				count++;
 		return count;
 	}
 
