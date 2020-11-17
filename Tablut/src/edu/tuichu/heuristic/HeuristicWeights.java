@@ -6,15 +6,15 @@ import java.util.HashMap;
  * Singleton for TuichuHeuristic weights.
  * White is max, Black is min.
  */
-public class HeuristicWeights extends HashMap<FactorType, Float> {
+public class HeuristicWeights extends HashMap<FactorType, Integer> {
 	private static final long serialVersionUID = 1L;
 	private static HeuristicWeights instance = null;
 	
 	private HeuristicWeights() {
 		super();
-		Float pos = Float.valueOf(1),
-			neg = Float.valueOf(-1),
-			neutr = Float.valueOf(0);
+		Integer pos = Integer.valueOf(1),
+			neg = Integer.valueOf(-1),
+			neutr = Integer.valueOf(0);
 		this.put(FactorType.WHITEWIN, pos);
 		this.put(FactorType.BLACKWIN, neg);
 		this.put(FactorType.KING_IN_CASTLE, pos);
