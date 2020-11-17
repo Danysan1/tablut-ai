@@ -9,7 +9,7 @@ import it.unibo.ai.didattica.competition.tablut.domain.State.Turn;
 
 public class TuichuHeuristic extends WeightedHeuristic {
 
-	public TuichuHeuristic(Map<FactorType, Float> weights) {
+	public TuichuHeuristic(Map<FactorType, Integer> weights) {
 		super(weights);
 	}
 
@@ -18,11 +18,19 @@ public class TuichuHeuristic extends WeightedHeuristic {
 	}
 
 	@Override
+<<<<<<< HEAD
 	protected Map<FactorType, Number> getFactors(State state) {
 		Map<FactorType, Number> map = new HashMap<>();
 		map.put(FactorType.WHITEWIN, Float.valueOf(isWhiteWin(state) ? 1 : 0));
 		map.put(FactorType.BLACKWIN, Float.valueOf(isBlackWin(state) ? 1 : 0));
 		map.put(FactorType.KING_IN_CASTLE, Float.valueOf(isKingInCastle(state) ? 1 : 0));
+=======
+	protected Map<FactorType, Integer> getFactors(State state) {
+		Map<FactorType, Integer> map = new HashMap<>();
+		map.put(FactorType.WHITEWIN, Integer.valueOf(isWhiteWin(state) ? 1 : 0));
+		map.put(FactorType.BLACKWIN, Integer.valueOf(isBlackWin(state) ? 1 : 0));
+		map.put(FactorType.KING_IN_CASTLE, Integer.valueOf(isKingInCastle(state) ? 1 : 0));
+>>>>>>> main
 		map.put(FactorType.WHITE_PAWNS, getPawns(Pawn.WHITE, state)+getPawns(Pawn.KING, state));
 		map.put(FactorType.BLACK_PAWNS, getPawns(Pawn.BLACK, state));
 		map.put(FactorType.EATEN_WHITE_PAWNS, getEatenPawns(Turn.WHITE, state));
@@ -70,13 +78,30 @@ public class TuichuHeuristic extends WeightedHeuristic {
 
 	protected int getMinMovesFromKingToWin(State state) {
 		// TODO To be implemented
-		return 0;
+		int[] valueholder = state.getKingPosition().clone();
+		int x = valueholder[0];
+		int y = valueholder[1];
+		int min = 50; //max value, since distance can never reach 50
+		int distance;
+		int[][] winningPos = new int[16][2];
+		winningPos = state.getWinningPos().clone();
+		for (int i=0; i<16; i++){
+			distance = Math.abs(x-winningPos[i][0]) + Math.abs(y-winningPos[i][1]);
+			if (min > distance)
+				min = distance;
+		}
+
+		return min;
 	}
 
 	protected int getPawnsInWinCells(Pawn playerOwningThePawns, State state) {
 		int count = 0;
 		for(int i=1; i<8; i++) {
+<<<<<<< HEAD
 			if(
+=======
+			if( //shouldn't winningpos be 16 different places of the board?
+>>>>>>> main
 				state.getPawn(0, i).equals(playerOwningThePawns) ||
 				state.getPawn(8, i).equals(playerOwningThePawns) ||
 				state.getPawn(i, 0).equals(playerOwningThePawns) ||
@@ -87,6 +112,7 @@ public class TuichuHeuristic extends WeightedHeuristic {
 	}
 
 	protected int getPawnsAdjacentToKing(Pawn playerOwningThePawns, State state) {
+<<<<<<< HEAD
 		int count = 0, x = -1, y = -1;
 		
 		for(int i=0; i<9; i++) {
@@ -98,6 +124,12 @@ public class TuichuHeuristic extends WeightedHeuristic {
 				}
 			}
 		}		
+=======
+		int count = 0, x, y;
+		int[] valueholder = state.getKingPosition(); //i saw that you searched for the position of the king, we needed the same code for getMinMovesFromKingToWin, so I created a unique function
+		x = valueholder[0];
+		y = valueholder[1];
+>>>>>>> main
 		if(x==-1 || y==-1) {
 			// This should never happen
 			throw new IllegalStateException();
@@ -114,6 +146,7 @@ public class TuichuHeuristic extends WeightedHeuristic {
 	}
 
 	protected int getPawnsInKingsRow(Pawn playerOwningThePawns, State state) {
+<<<<<<< HEAD
 		// TODO To be implemented
 		return 0;
 	}
@@ -121,6 +154,31 @@ public class TuichuHeuristic extends WeightedHeuristic {
 	protected int getPawnsInKingsColumn(Pawn playerOwningThePawns, State state) {
 		// TODO To be implemented
 		return 0;
+=======
+		int x,y;
+		int count=0;
+		int[] valueholder = state.getKingPosition();
+		x = valueholder[0];
+		y = valueholder[1];
+		for (int i=0; i<9; i++){
+			if(state.getPawn(i,y).equals(playerOwningThePawns))
+				count++;
+		}
+		return count;
+	}
+
+	protected int getPawnsInKingsColumn(Pawn playerOwningThePawns, State state) {
+                int x,y;
+                int count=0;
+                int[] valueholder = state.getKingPosition();
+                x = valueholder[0];
+                y = valueholder[1];
+                for (int i=0; i<9; i++){
+                        if(state.getPawn(x,i).equals(playerOwningThePawns))
+                                count++;
+                }
+                return count;
+>>>>>>> main
 	}
 	
 }
