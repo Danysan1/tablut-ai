@@ -18,6 +18,7 @@ public class StateTablut extends State implements Serializable {
 		super();
 		this.board = new Pawn[9][9];
 
+
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 9; j++) {
 				this.board[i][j] = Pawn.EMPTY;
