@@ -150,6 +150,43 @@ public abstract class State {
 		this.turn = turn;
 	}
 
+	public int[][] getWinningPos(){
+                int[][] winningPos = new int[16][2];
+                winningPos[0][0] = 0; winningPos[0][1] = 1;
+                winningPos[1][0] = 0; winningPos[1][1] = 2;
+                winningPos[2][0] = 0; winningPos[2][1] = 6;
+                winningPos[3][0] = 0; winningPos[3][1] = 7;
+                winningPos[4][0] = 1; winningPos[4][1] = 0;
+                winningPos[5][0] = 1; winningPos[5][1] = 8;
+                winningPos[6][0] = 2; winningPos[6][1] = 0;
+                winningPos[7][0] = 2; winningPos[7][1] = 8;
+                winningPos[8][0] = 6; winningPos[8][1] = 0;
+                winningPos[9][0] = 6; winningPos[9][1] = 8;
+                winningPos[10][0] = 7; winningPos[10][1] = 0;
+                winningPos[11][0] = 7; winningPos[11][1] = 8;
+                winningPos[12][0] = 8; winningPos[12][1] = 1;
+                winningPos[13][0] = 8; winningPos[13][1] = 2;
+                winningPos[14][0] = 8; winningPos[14][1] = 6;
+                winningPos[15][0] = 8; winningPos[15][1] = 7;
+		return winningPos;
+
+	}
+
+	public int[] getKingPosition(){
+		int x=0, y=0;
+                for(int i=0; i<9; i++) {
+                        for(int j=0; j<9; j++) {
+                                if(state.getPawn(i, j).equals(Pawn.KING)) {
+                                        x = i;
+                                        y = j;
+                                        break;
+                                }
+                        }
+                }
+		int[] valueholder = {x,y}; //return an array containing the position of the king
+		return valueholder;
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
