@@ -9,6 +9,7 @@ import java.util.Map;
 
 import edu.tuichu.algorithm.MiniMaxAlgorithm;
 import edu.tuichu.algorithm.TablutAlgorithm;
+import edu.tuichu.heuristic.MockHeuristic;
 import it.unibo.ai.didattica.competition.tablut.client.TablutClient;
 import it.unibo.ai.didattica.competition.tablut.client.TablutRandomClient;
 import it.unibo.ai.didattica.competition.tablut.domain.Action;
@@ -127,7 +128,7 @@ public class TuichuTablutClient extends TablutClient {
 		
 		if(this.game != 4)
 			throw new IllegalArgumentException("TuichuTablutClient only supports Ashton rules");
-		TablutAlgorithm algorithm = new MiniMaxAlgorithm(100);
+		TablutAlgorithm algorithm = new MiniMaxAlgorithm(100, new MockHeuristic());
 		
 		List<int[]> pawns = new ArrayList<int[]>();
 		List<int[]> empty = new ArrayList<int[]>();
