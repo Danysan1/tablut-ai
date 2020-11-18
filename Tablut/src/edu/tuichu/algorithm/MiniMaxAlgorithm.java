@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.tuichu.heuristic.TablutHeuristic;
 import edu.tuichu.heuristic.TuichuHeuristic;
 import it.unibo.ai.didattica.competition.tablut.domain.Action;
 import it.unibo.ai.didattica.competition.tablut.domain.Game;
@@ -12,14 +13,18 @@ import it.unibo.ai.didattica.competition.tablut.domain.State.Pawn;
 import it.unibo.ai.didattica.competition.tablut.domain.State.Turn;
 
 public class MiniMaxAlgorithm implements TablutAlgorithm {
-	private TuichuHeuristic heuristic;
+	private TablutHeuristic heuristic;
 	private Utilities utilities;
 	private int maxDepth;
 	
-	public MiniMaxAlgorithm(int maxDepth) {
-		heuristic = new TuichuHeuristic();
-		utilities = new Utilities();
+	public MiniMaxAlgorithm(int maxDepth, TablutHeuristic heuristic) {
+		this.heuristic = heuristic;
+		this.utilities = new Utilities();
 		this.maxDepth = maxDepth;
+	}
+	
+	public MiniMaxAlgorithm(int maxDepth) {
+		this(maxDepth, new TuichuHeuristic());
 	}
 
 	@Override
