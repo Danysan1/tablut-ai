@@ -99,7 +99,7 @@ public class TuichuTablutClient extends TablutClient {
 
 		State state;
 
-		Game rules = null;
+		/*Game rules = null;
 		switch (this.game) {
 		case 1:
 			state = new StateTablut();
@@ -123,10 +123,14 @@ public class TuichuTablutClient extends TablutClient {
 			System.out.println("Error in game selection");
 			System.exit(4);
 		}
-
+		TablutAlgorithm algorithm = new MiniMaxAlgorithm(rules);*/
+		
+		if(this.game != 4)
+			throw new IllegalArgumentException("TuichuTablutClient only supports Ashton rules");
+		TablutAlgorithm algorithm = new MiniMaxAlgorithm(100);
+		
 		List<int[]> pawns = new ArrayList<int[]>();
 		List<int[]> empty = new ArrayList<int[]>();
-		TablutAlgorithm algorithm = new MiniMaxAlgorithm(rules);
 
 		System.out.println("You are player " + this.getPlayer().toString() + "!");
 
@@ -150,12 +154,12 @@ public class TuichuTablutClient extends TablutClient {
 				turn = state.getTurn();
 			
 			if(player.equals(turn)) {
-				Action a = algorithm.getAction(state, player);
-				System.out.println("Mossa scelta: " + a.toString());
+				Action a = algorithm.getAction(state);
+				System.out.println("Choosen move: " + a.toString());
 				try {
 					this.write(a);
 				} catch (ClassNotFoundException | IOException e) {
-					// TODO Auto-generated catch block
+					System.out.println("An error occurred while writing the choosen move");
 					e.printStackTrace();
 				}
 				pawns.clear();
