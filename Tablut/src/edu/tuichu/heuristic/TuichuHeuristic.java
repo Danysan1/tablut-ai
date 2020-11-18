@@ -27,8 +27,7 @@ public class TuichuHeuristic extends WeightedHeuristic {
 		map.put(FactorType.BLACK_PAWNS, getPawns(Pawn.BLACK, state));
 		map.put(FactorType.EATEN_WHITE_PAWNS, getEatenPawns(Turn.WHITE, state));
 		map.put(FactorType.EATEN_BLACK_PAWNS, getEatenPawns(Turn.BLACK, state));
-		map.put(FactorType.DISTANCE_TO_WIN, getMinManhattanDistanceFromKingToWin(state));
-		map.put(FactorType.MOVES_TO_WIN, getMinMovesFromKingToWin(state));
+		map.put(FactorType.MOVES_TO_WIN, getMinManhattanDistanceFromKingToWin(state));
 		map.put(FactorType.WHITE_PAWNS_IN_WIN_CELLS, getPawnsInWinCells(Pawn.WHITE, state));
 		map.put(FactorType.BLACK_PAWNS_IN_WIN_CELLS, getPawnsInWinCells(Pawn.BLACK, state));
 		map.put(FactorType.WHITE_PAWNS_ADJACENT_TO_KING, getPawnsAdjacentToKing(Pawn.WHITE, state));
@@ -64,11 +63,6 @@ public class TuichuHeuristic extends WeightedHeuristic {
 	}
 
 	protected int getMinManhattanDistanceFromKingToWin(State state) {
-		// TODO To be implemented
-		return 0;
-	}
-
-	protected int getMinMovesFromKingToWin(State state) {
 		// TODO To be implemented
 		int[] valueholder = state.getKingPosition().clone();
 		int x = valueholder[0];

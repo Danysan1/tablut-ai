@@ -22,15 +22,15 @@ public class HeuristicWeights extends HashMap<FactorType, Integer> {
 		this.put(FactorType.BLACK_PAWNS, neg);
 		this.put(FactorType.EATEN_WHITE_PAWNS, neg);
 		this.put(FactorType.EATEN_BLACK_PAWNS, pos);
-		this.put(FactorType.DISTANCE_TO_WIN, pos);
+		//this.put(FactorType.DISTANCE_TO_WIN, pos);
 		this.put(FactorType.MOVES_TO_WIN, pos);
-		this.put(FactorType.WHITE_PAWNS_IN_WIN_CELLS, neutr);
+		//this.put(FactorType.WHITE_PAWNS_IN_WIN_CELLS, neutr);
 		this.put(FactorType.BLACK_PAWNS_IN_WIN_CELLS, neg);
 		this.put(FactorType.WHITE_PAWNS_ADJACENT_TO_KING, pos);
 		this.put(FactorType.BLACK_PAWNS_ADJACENT_TO_KING, neg);
-		this.put(FactorType.WHITE_PAWNS_IN_KINGS_ROW, neutr);
+		//this.put(FactorType.WHITE_PAWNS_IN_KINGS_ROW, neutr);
 		this.put(FactorType.BLACK_PAWNS_IN_KINGS_ROW, neg);
-		this.put(FactorType.WHITE_PAWNS_IN_KINGS_COLUMN, neutr);
+		//this.put(FactorType.WHITE_PAWNS_IN_KINGS_COLUMN, neutr);
 		this.put(FactorType.BLACK_PAWNS_IN_KINGS_COLUMN, neg);
 	}
 	
