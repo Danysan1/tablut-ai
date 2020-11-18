@@ -58,9 +58,11 @@ public class TuichuHeuristic extends WeightedHeuristic {
 		return state.getNumberOf(playerOwningThePawns);
 	}
 
-	protected int getEatenPawns(Turn playerOwningThePawns, State state) {
-		// TODO To be implemented
-		return 0;
+	protected int getEatenPawns(Pawn playerOwningThePawns, State state) {
+		if (!playerOwningThePawns.equals(Pawn.BLACK) && !playerOwningThePawns.equals(Pawn.WHITE))
+			return -1; //error: it should not be called for any pawn except for white and black
+		int ttotal = playerOwningThePawns.equals(Pawn.BLACK) ? 2 : 1;
+		return state.getNumberOf(playerOwningThePawns) * ttotal;
 	}
 
 	protected int getMinManhattanDistanceFromKingToWin(State state) {

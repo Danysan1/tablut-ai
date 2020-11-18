@@ -163,8 +163,8 @@ public class TablutRandomClient extends TablutClient {
 						} else {
 							selected = pawns.get(0);
 						}
-
 						String from = this.getCurrentState().getBox(selected[0], selected[1]);
+						
 
 						selected = empty.get(new Random().nextInt(empty.size() - 1));
 						String to = this.getCurrentState().getBox(selected[0], selected[1]);
