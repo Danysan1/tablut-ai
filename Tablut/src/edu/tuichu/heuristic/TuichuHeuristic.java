@@ -25,8 +25,8 @@ public class TuichuHeuristic extends WeightedHeuristic {
 		map.put(FactorType.KING_IN_CASTLE, Integer.valueOf(isKingInCastle(state) ? 1 : 0));
 		map.put(FactorType.WHITE_PAWNS, getPawns(Pawn.WHITE, state)+getPawns(Pawn.KING, state));
 		map.put(FactorType.BLACK_PAWNS, getPawns(Pawn.BLACK, state));
-		map.put(FactorType.EATEN_WHITE_PAWNS, getEatenPawns(Turn.WHITE, state));
-		map.put(FactorType.EATEN_BLACK_PAWNS, getEatenPawns(Turn.BLACK, state));
+		map.put(FactorType.EATEN_WHITE_PAWNS, getEatenPawns(Pawn.WHITE, state));
+		map.put(FactorType.EATEN_BLACK_PAWNS, getEatenPawns(Pawn.BLACK, state));
 		map.put(FactorType.MOVES_TO_WIN, getMinManhattanDistanceFromKingToWin(state));
 		map.put(FactorType.WHITE_PAWNS_IN_WIN_CELLS, getPawnsInWinCells(Pawn.WHITE, state));
 		map.put(FactorType.BLACK_PAWNS_IN_WIN_CELLS, getPawnsInWinCells(Pawn.BLACK, state));
@@ -57,16 +57,15 @@ public class TuichuHeuristic extends WeightedHeuristic {
 		return state.getNumberOf(playerOwningThePawns);
 	}
 
-	protected int getEatenPawns(Pawn pawn, Turn playerOwningThePawns, State state) {
+	protected int getEatenPawns(Pawn pawn, State state) {
 		//if (!playerOwningThePawns.equals(Pawn.BLACK) && !playerOwningThePawns.equals(Pawn.WHITE))
 		//	return -1; //error: it should not be called for any pawn except for white and black
 		//int ttotal = playerOwningThePawns.equals(Pawn.BLACK) ? 2 : 1;
-		int ttotal = 8 * playerOwningThePawns.equalsTurn(Turn.BLACK) ? 2 : 1;
+		int ttotal = 8 * (pawn.equals(Pawn.BLACK) ? 2 : 1);
 		return ttotal - state.getNumberOf(pawn);
 	}
 
 	protected int getMinManhattanDistanceFromKingToWin(State state) {
-		// TODO To be implemented
 		int[] valueholder = state.getKingPosition().clone();
 		int x = valueholder[0];
 		int y = valueholder[1];
