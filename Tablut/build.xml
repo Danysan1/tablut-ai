@@ -9,7 +9,7 @@
 
     <target name="compile">
         <mkdir dir="build"/>
-        <javac encoding="iso-8859-1" srcdir="src" destdir="build">
+        <javac encoding="iso-8859-1" srcdir="src" destdir="build" includeantruntime="false">
             <classpath>
                 <pathelement path="lib/gson-2.2.2.jar" />
                 <pathelement path="lib/commons-cli-1.4.jar" />
