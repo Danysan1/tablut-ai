@@ -21,7 +21,7 @@ public abstract class WeightedHeuristic implements TablutHeuristic {
 
 	@Override
 	public float getValue(State state) {
-		Map<FactorType,Integer> factors = getFactors(state);
+		Map<FactorType,Float> factors = getFactors(state);
 		Integer zero = Integer.valueOf(0);
 		int value = 0;
 		for(FactorType t : factors.keySet()){
@@ -30,5 +30,5 @@ public abstract class WeightedHeuristic implements TablutHeuristic {
 		return value;
 	}
 	
-	protected abstract Map<FactorType, Integer> getFactors(State state);
+	protected abstract Map<FactorType, Float> getFactors(State state);
 }

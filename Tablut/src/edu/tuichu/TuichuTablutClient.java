@@ -55,18 +55,18 @@ public class TuichuTablutClient extends TablutClient {
 	}
 	
 	public TuichuTablutClient(String player, int timeout, String ipAddress) throws UnknownHostException, IOException {
-		this(player, "random", 4, timeout, ipAddress);
+		this(player, "tuichu", 4, timeout, ipAddress);
 	}
 
 	public TuichuTablutClient(String player) throws UnknownHostException, IOException {
-		this(player, "random", 4, 60, "localhost");
+		this(player, "tuichu", 4, 60, "localhost");
 	}
 
 
 	public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException {
 		int gametype = 4;
 		String role = "";
-		String name = "random";
+		String name = "tuichu";
 		String ipAddress = "localhost";
 		int timeout = 60;
 		// TODO: change the behavior?
@@ -86,7 +86,7 @@ public class TuichuTablutClient extends TablutClient {
 		}
 		System.out.println("Selected client: " + args[0]);
 
-		TablutRandomClient client = new TablutRandomClient(role, name, gametype, timeout, ipAddress);
+		TuichuTablutClient client = new TuichuTablutClient(role, name, gametype, timeout, ipAddress);
 		client.run();
 	}
 
@@ -130,7 +130,7 @@ public class TuichuTablutClient extends TablutClient {
 		if(this.game != 4)
 			throw new IllegalArgumentException("TuichuTablutClient only supports Ashton rules");
 		//TablutAlgorithm algorithm = new MiniMaxAlgorithm(100, new MockHeuristic());
-		TablutAlgorithm algorithm = new MiniMaxAlgorithm(100, new TuichuHeuristic());
+		TablutAlgorithm algorithm = new MiniMaxAlgorithm(4, new TuichuHeuristic());
 		
 		List<int[]> pawns = new ArrayList<int[]>();
 		List<int[]> empty = new ArrayList<int[]>();
@@ -157,7 +157,9 @@ public class TuichuTablutClient extends TablutClient {
 				turn = state.getTurn();
 			
 			if(player.equals(turn)) {
+				System.out.println("AAAAA");
 				Action a = algorithm.getAction(state);
+				System.out.println("BBBBB");
 				System.out.println("Choosen move: " + a.toString());
 				try {
 					this.write(a);
