@@ -157,9 +157,10 @@ public class TuichuTablutClient extends TablutClient {
 				turn = state.getTurn();
 			
 			if(player.equals(turn)) {
-				System.out.println("AAAAA");
 				Action a = algorithm.getAction(state);
-				System.out.println("BBBBB");
+				if(a == null)
+					throw new RuntimeException("No action selected");
+
 				System.out.println("Choosen move: " + a.toString());
 				try {
 					this.write(a);

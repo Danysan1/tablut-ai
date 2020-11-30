@@ -34,7 +34,10 @@ public class MiniMaxAlgorithm implements TablutAlgorithm {
 
 	public Action makeDecision(State state) {
 		List<Action> actions = getPossibleMoves(state);
-		System.out.println("Total possible muves: " + actions.size());
+		if(actions.size() == 0)
+			throw new RuntimeException("No possible moves available");
+
+		System.out.println("Total possible moves: " + actions.size());
 		Turn turn = state.getTurn();
 		Action result = null;
 		float evaluation = 0;
@@ -56,9 +59,6 @@ public class MiniMaxAlgorithm implements TablutAlgorithm {
 				}
 			}
 		}
-
-		if(result == null)
-			throw new RuntimeException("Nessuna azione selezionabile");
 
 		return result;
 	}
@@ -120,31 +120,24 @@ public class MiniMaxAlgorithm implements TablutAlgorithm {
 
 		Pawn[][] board = state.getBoard();
 
-		/* WHITE */
-		if (state.getTurn().equals(Turn.WHITE)) {
-			for (int i = 0; i < 9; i++) {
-				for (int j = 0; i < 9; i++) {
-					Pawn pawn = board[i][j];
+		for (int i = 0; i < 9; i++) {
+			for (int j = 0; j < 9; j++) {
+				Pawn pawn = board[i][j];
+				//System.out.println("Pawn "+i+"/"+j+": "+pawn);
+				if (state.getTurn().equals(Turn.WHITE)) {	/* WHITE */
 					if (pawn.equals(Pawn.KING)) {
 						actions.addAll(getPossibleMoves(state, i, j));
 					} else if (pawn.equals(Pawn.WHITE)) {
 						actions.addAll(getPossibleMoves(state, i, j));
 					}
-				}
-			}
-		}
-
-		/* BLACK */
-		if (state.getTurn().equals(Turn.BLACK)) {
-			for (int i = 0; i < 9; i++) {
-				for (int j = 0; i < 9; i++) {
-					Pawn pawn = board[i][j];
+				} else if (state.getTurn().equals(Turn.BLACK)) {	/* BLACK */
 					if (pawn.equals(Pawn.BLACK)) {
 						actions.addAll(getPossibleMoves(state, i, j));
 					}
 				}
 			}
 		}
+
 		return actions;
 	}
 
