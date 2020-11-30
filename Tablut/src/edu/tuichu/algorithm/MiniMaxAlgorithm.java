@@ -57,6 +57,9 @@ public class MiniMaxAlgorithm implements TablutAlgorithm {
 			}
 		}
 
+		if(result == null)
+			throw new RuntimeException("Nessuna azione selezionabile");
+
 		return result;
 	}
 
