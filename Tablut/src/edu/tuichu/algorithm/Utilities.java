@@ -169,7 +169,8 @@ public class Utilities {
 			state = this.checkCaptureWhite(state, a);
 		}
 
-		System.out.println("Stato:\n" + state.toString());
+		//System.out.println("Stato_Utilities:\n" + state.toString());
+		System.out.println("Utilities::performMove: "+a);
 
 		return state;
 	}
