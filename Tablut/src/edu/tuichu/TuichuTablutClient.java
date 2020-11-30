@@ -12,15 +12,7 @@ import edu.tuichu.algorithm.TablutAlgorithm;
 import edu.tuichu.heuristic.MockHeuristic;
 import edu.tuichu.heuristic.TuichuHeuristic;
 import it.unibo.ai.didattica.competition.tablut.client.TablutClient;
-import it.unibo.ai.didattica.competition.tablut.client.TablutRandomClient;
-import it.unibo.ai.didattica.competition.tablut.domain.Action;
-import it.unibo.ai.didattica.competition.tablut.domain.Game;
-import it.unibo.ai.didattica.competition.tablut.domain.GameAshtonTablut;
-import it.unibo.ai.didattica.competition.tablut.domain.GameModernTablut;
-import it.unibo.ai.didattica.competition.tablut.domain.GameTablut;
-import it.unibo.ai.didattica.competition.tablut.domain.State;
-import it.unibo.ai.didattica.competition.tablut.domain.StateBrandub;
-import it.unibo.ai.didattica.competition.tablut.domain.StateTablut;
+import it.unibo.ai.didattica.competition.tablut.domain.*;
 import it.unibo.ai.didattica.competition.tablut.domain.State.Turn;
 
 /**
@@ -55,18 +47,18 @@ public class TuichuTablutClient extends TablutClient {
 	}
 	
 	public TuichuTablutClient(String player, int timeout, String ipAddress) throws UnknownHostException, IOException {
-		this(player, "random", 4, timeout, ipAddress);
+		this(player, "tuichu", 4, timeout, ipAddress);
 	}
 
 	public TuichuTablutClient(String player) throws UnknownHostException, IOException {
-		this(player, "random", 4, 60, "localhost");
+		this(player, "tuichu", 4, 60, "localhost");
 	}
 
 
 	public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException {
 		int gametype = 4;
 		String role = "";
-		String name = "random";
+		String name = "tuichu";
 		String ipAddress = "localhost";
 		int timeout = 60;
 		// TODO: change the behavior?
@@ -86,7 +78,7 @@ public class TuichuTablutClient extends TablutClient {
 		}
 		System.out.println("Selected client: " + args[0]);
 
-		TablutRandomClient client = new TablutRandomClient(role, name, gametype, timeout, ipAddress);
+		TuichuTablutClient client = new TuichuTablutClient(role, name, gametype, timeout, ipAddress);
 		client.run();
 	}
 
@@ -127,13 +119,18 @@ public class TuichuTablutClient extends TablutClient {
 		}
 		TablutAlgorithm algorithm = new MiniMaxAlgorithm(rules);*/
 		
-		if(this.game != 4)
+		switch (this.game) {
+		case 4:
+			state = new StateTablut();
+			state.setTurn(State.Turn.WHITE);
+			System.out.println("Ashton Tablut game");
+			break;
+		default:
 			throw new IllegalArgumentException("TuichuTablutClient only supports Ashton rules");
+		}
 		//TablutAlgorithm algorithm = new MiniMaxAlgorithm(100, new MockHeuristic());
 		TablutAlgorithm algorithm = new MiniMaxAlgorithm(100, new TuichuHeuristic());
-		
-		List<int[]> pawns = new ArrayList<int[]>();
-		List<int[]> empty = new ArrayList<int[]>();
+
 
 		System.out.println("You are player " + this.getPlayer().toString() + "!");
 
@@ -156,17 +153,21 @@ public class TuichuTablutClient extends TablutClient {
 			Turn player = this.getPlayer(),
 				turn = state.getTurn();
 			
+			System.out.print("Player: ");
+			System.out.println(player);
+			System.out.print("Turn: ");
+			System.out.println(turn);
+
 			if(player.equals(turn)) {
 				Action a = algorithm.getAction(state);
-				System.out.println("Choosen move: " + a.toString());
+				System.out.print("Choosen move: ");
+				System.out.println(a);
 				try {
 					this.write(a);
 				} catch (ClassNotFoundException | IOException e) {
 					System.out.println("An error occurred while writing the choosen move");
 					e.printStackTrace();
 				}
-				pawns.clear();
-				empty.clear();
 			} else if (turn.equals(opponent.get(player))) {
 				System.out.println("Waiting for your opponent move... ");
 			} else if (turn.equals(win.get(player))) { // ho vinto

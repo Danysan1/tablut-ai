@@ -1,5 +1,6 @@
 package edu.tuichu.algorithm;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import it.unibo.ai.didattica.competition.tablut.domain.Action;
@@ -10,6 +11,7 @@ public class Utilities {
 	private List<String> citadels;
 	
 	public Utilities(){
+		this.citadels = new ArrayList<>();
 		this.citadels.add("a4");
 		this.citadels.add("a5");
 		this.citadels.add("a6");
