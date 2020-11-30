@@ -28,13 +28,13 @@ public class MiniMaxAlgorithm implements TablutAlgorithm {
 
 	@Override
 	public Action getAction(State state) {
-		Action a;
-		a = makeDecision(state);
+		Action a = makeDecision(state);
 		return a;
 	}
 
 	public Action makeDecision(State state) {
 		List<Action> actions = getPossibleMoves(state);
+		System.out.println("Total possible muves: " + actions.size());
 		Turn turn = state.getTurn();
 		Action result = null;
 		float evaluation = 0;

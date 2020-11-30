@@ -18,54 +18,50 @@ public class TuichuHeuristic extends WeightedHeuristic {
 	}
 
 	@Override
-	protected Map<FactorType, Integer> getFactors(State state) {
-		Map<FactorType, Integer> map = new HashMap<>();
-		map.put(FactorType.WHITEWIN, Integer.valueOf(isWhiteWin(state) ? 1 : 0));
-		map.put(FactorType.BLACKWIN, Integer.valueOf(isBlackWin(state) ? 1 : 0));
-		map.put(FactorType.KING_IN_CASTLE, Integer.valueOf(isKingInCastle(state) ? 1 : 0));
-		map.put(FactorType.WHITE_PAWNS, getPawns(Pawn.WHITE, state)+getPawns(Pawn.KING, state));
-		map.put(FactorType.BLACK_PAWNS, getPawns(Pawn.BLACK, state));
+	protected Map<FactorType, Float> getFactors(State state) {
+		Map<FactorType, Float> map = new HashMap<>();
+		map.put(FactorType.WHITEWIN, isWhiteWin(state));
+		map.put(FactorType.BLACKWIN, isBlackWin(state));
+		//map.put(FactorType.KING_IN_CASTLE, isKingInCastle(state));
 		map.put(FactorType.EATEN_WHITE_PAWNS, getEatenPawns(Pawn.WHITE, state));
 		map.put(FactorType.EATEN_BLACK_PAWNS, getEatenPawns(Pawn.BLACK, state));
-		map.put(FactorType.MOVES_TO_WIN, getMinManhattanDistanceFromKingToWin(state));
-		map.put(FactorType.WHITE_PAWNS_IN_WIN_CELLS, getPawnsInWinCells(Pawn.WHITE, state));
-		map.put(FactorType.BLACK_PAWNS_IN_WIN_CELLS, getPawnsInWinCells(Pawn.BLACK, state));
+		map.put(FactorType.DISTANCE_TO_WIN, getMinManhattanDistanceFromKingToWin(state));
 		map.put(FactorType.WHITE_PAWNS_ADJACENT_TO_KING, getPawnsAdjacentToKing(Pawn.WHITE, state));
 		map.put(FactorType.BLACK_PAWNS_ADJACENT_TO_KING, getPawnsAdjacentToKing(Pawn.BLACK, state));
-		map.put(FactorType.WHITE_PAWNS_IN_KINGS_ROW, getPawnsInKingsRow(Pawn.WHITE, state));
-		map.put(FactorType.BLACK_PAWNS_IN_KINGS_ROW, getPawnsInKingsRow(Pawn.BLACK, state));
-		map.put(FactorType.WHITE_PAWNS_IN_KINGS_COLUMN, getPawnsInKingsColumn(Pawn.WHITE, state));
-		map.put(FactorType.BLACK_PAWNS_IN_KINGS_COLUMN, getPawnsInKingsColumn(Pawn.BLACK, state));
+		map.put(FactorType.WHITE_AROUND_KING, getPawnsAroundKing(Pawn.WHITE, state));
+		map.put(FactorType.BLACK_AROUND_KING, getPawnsAroundKing(Pawn.BLACK, state));
 		return map;
 	}
 	
 	// FUNZIONI DI ANALISI
-
-	protected boolean isWhiteWin(State state) {
-		return state.getTurn().equals(Turn.WHITEWIN);
+	
+	private Float getPawnsAroundKing(Pawn pawn, State state) {
+		double around = (double) (getPawnsInKingsColumn(pawn, state) + getPawnsInKingsRow(pawn, state));
+		
+		double a_nrm = around/4.0;
+		return (float)a_nrm;
 	}
 
-	protected boolean isBlackWin(State state) {
-		return state.getTurn().equals(Turn.BLACKWIN);
+	protected float isWhiteWin(State state) {
+		return (state.getTurn().equals(Turn.WHITEWIN) ? 1 : 0);
 	}
 
-	protected boolean isKingInCastle(State state) {
-		return state.getPawn(4,4).equals(Pawn.KING);
+	protected float isBlackWin(State state) {
+		return (state.getTurn().equals(Turn.BLACKWIN) ? 1 : 0);
 	}
 
-	protected int getPawns(Pawn playerOwningThePawns, State state) {
-		return state.getNumberOf(playerOwningThePawns);
+	protected float isKingInCastle(State state) {
+		return (state.getPawn(4,4).equals(Pawn.KING) ? 1 : 0);
 	}
 
-	protected int getEatenPawns(Pawn pawn, State state) {
-		//if (!playerOwningThePawns.equals(Pawn.BLACK) && !playerOwningThePawns.equals(Pawn.WHITE))
-		//	return -1; //error: it should not be called for any pawn except for white and black
-		//int ttotal = playerOwningThePawns.equals(Pawn.BLACK) ? 2 : 1;
-		int ttotal = 8 * (pawn.equals(Pawn.BLACK) ? 2 : 1);
-		return ttotal - state.getNumberOf(pawn);
+	protected float getEatenPawns(Pawn pawn, State state) {
+		float total = 8 * (pawn.equals(Pawn.BLACK) ? 2 : 1);
+		float eaten = total - (float) state.getNumberOf(pawn);
+		float e_nrm = (eaten)/(float)8;
+		return e_nrm;
 	}
 
-	protected int getMinManhattanDistanceFromKingToWin(State state) {
+	protected float getMinManhattanDistanceFromKingToWin(State state) {
 		int[] valueholder = state.getKingPosition().clone();
 		int x = valueholder[0];
 		int y = valueholder[1];
@@ -79,18 +75,12 @@ public class TuichuHeuristic extends WeightedHeuristic {
 				min = distance;
 		}
 
-		return min;
+		double m_nrm = ((double)min - 1.0)/(13.0 - 1.0);
+		double m_std = 1.0 - m_nrm;
+		return (float)m_std;
 	}
 
-	protected int getPawnsInWinCells(Pawn playerOwningThePawns, State state) {
-		int count = 0;
-		for(Pawn pawn : state.getPawnsInWinCells())
-			if(pawn.equals(playerOwningThePawns))
-				count++;
-		return count;
-	}
-
-	protected int getPawnsAdjacentToKing(Pawn playerOwningThePawns, State state) {
+	protected float getPawnsAdjacentToKing(Pawn playerOwningThePawns, State state) {
 		int count = 0, x, y;
 		int[] valueholder = state.getKingPosition(); //i saw that you searched for the position of the king, we needed the same code for getMinMovesFromKingToWin, so I created a unique function
 		x = valueholder[0];
@@ -107,33 +97,51 @@ public class TuichuHeuristic extends WeightedHeuristic {
 			}
 		}
 		
-		return count;
+		return (float)count;
 	}
 
-	protected int getPawnsInKingsRow(Pawn playerOwningThePawns, State state) {
+	protected float getPawnsInKingsRow(Pawn playerOwningThePawns, State state) {
 		int x,y;
 		int count=0;
 		int[] valueholder = state.getKingPosition();
 		x = valueholder[0];
 		y = valueholder[1];
-		for (int i=0; i<9; i++){
-			if(state.getPawn(i,y).equals(playerOwningThePawns))
+		for (int i=x+1; i<9; i++){
+			if(state.getPawn(i,y).equals(playerOwningThePawns)) {
 				count++;
+				break;
+			}
 		}
-		return count;
+		for (int i=x-1; i>=0; i--){
+			if(state.getPawn(i,y).equals(playerOwningThePawns)) {
+				count++;
+				break;
+			}
+		}
+		
+		
+		return (float)count;
 	}
 
-	protected int getPawnsInKingsColumn(Pawn playerOwningThePawns, State state) {
-                int x,y;
-                int count=0;
-                int[] valueholder = state.getKingPosition();
-                x = valueholder[0];
-                y = valueholder[1];
-                for (int i=0; i<9; i++){
-                        if(state.getPawn(x,i).equals(playerOwningThePawns))
-                                count++;
-                }
-                return count;
+	protected float getPawnsInKingsColumn(Pawn playerOwningThePawns, State state) {
+        int x,y;
+        int count=0;
+        int[] valueholder = state.getKingPosition();
+        x = valueholder[0];
+        y = valueholder[1];
+        for (int i=y+1; i<9; i++){
+			if(state.getPawn(y,i).equals(playerOwningThePawns)) {
+				count++;
+				break;
+			}
+		}
+		for (int i=y-1; i>=0; i--){
+			if(state.getPawn(y,i).equals(playerOwningThePawns)) {
+				count++;
+				break;
+			}
+		}
+        return (float) count;
 	}
 	
 }
