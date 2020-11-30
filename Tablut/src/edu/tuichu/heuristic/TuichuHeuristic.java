@@ -81,17 +81,22 @@ public class TuichuHeuristic extends WeightedHeuristic {
 	}
 
 	protected float getPawnsAdjacentToKing(Pawn playerOwningThePawns, State state) {
-		int count = 0, x, y;
-		int[] valueholder = state.getKingPosition(); //i saw that you searched for the position of the king, we needed the same code for getMinMovesFromKingToWin, so I created a unique function
-		x = valueholder[0];
-		y = valueholder[1];
+		int count = 0;
+		int[] kingPosition = state.getKingPosition();
+		final int
+			x = kingPosition[0],
+			y = kingPosition[1],
+			minX = x>1 ? x-1 : 0,
+			minY = y>1 ? y-1 : 0,
+			maxX = x<8 ? x+1 : 9,
+			maxY = y<8 ? y+1 : 9;
 		if(x==-1 || y==-1) {
 			// This should never happen
 			throw new IllegalStateException();
 		}
 		
-		for(int i=(x-1); i<x+1; i++) {
-			for(int j=(y-1); j<(y+1); j++) {
+		for(int i=minX; i<maxX; i++) {
+			for(int j=minY; j<maxY; j++) {
 				if(state.getPawn(i, j).equals(playerOwningThePawns))
 					count++;
 			}
