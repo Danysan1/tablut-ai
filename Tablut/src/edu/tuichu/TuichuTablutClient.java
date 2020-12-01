@@ -9,7 +9,6 @@ import java.util.Map;
 
 import edu.tuichu.algorithm.MiniMaxAlgorithm;
 import edu.tuichu.algorithm.TablutAlgorithm;
-import edu.tuichu.heuristic.MockHeuristic;
 import edu.tuichu.heuristic.TuichuHeuristic;
 import it.unibo.ai.didattica.competition.tablut.client.TablutClient;
 import it.unibo.ai.didattica.competition.tablut.client.TablutRandomClient;

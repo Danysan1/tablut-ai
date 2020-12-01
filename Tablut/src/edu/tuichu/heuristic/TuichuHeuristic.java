@@ -20,27 +20,6 @@ public class TuichuHeuristic implements TablutHeuristic {
 		{8, 6}, {8, 7}
 	};
 
-	/* Classifica:
-	 * 8 white win
-	 * 7-6 eaten black > 1
-	 * 5 eaten black = 1
-	 * 4-3 manhattan distance
-	 * 2-1 white adjacent to king
-	 * 0.5 nothing
-	 * --------------------------
-	 * 0 draw
-	 * --------------------------
-	 * -0.5 nothing
-	 * -1 eaten white = 1
-	 * -2 black adj = 1
-	 * -3 eaten white > 1
-	 * -4 black adj = 2
-	 * (-4.5 path to win -1) ?
-	 * -5 black adj = 3
-	 * -7 black wins -> black adj = 4
-	 */
-	
-	 // TODO insert list indexes
 	private static final int WHITE_WIN = 0;
 	private static final int BLACK_WIN = 1;
 	private static final int EATEN_BLACK = 2;
@@ -49,35 +28,39 @@ public class TuichuHeuristic implements TablutHeuristic {
 	private static final int DRAW = 5;
 	private static final int EATEN_WHITE = 6;
 	private static final int BLACK_ADJ_KING = 7;
+	private static final int WHITE_IN_WINNIG_TILES = 8;
 	
-	private double weights[];
+	private double[] weights;
 	
 	public TuichuHeuristic () {
 		initWeights();
 	}
 	
 	private void initWeights() {
-		weights[WHITE_WIN] = 0;
-		weights[BLACK_WIN] = 0;
-		weights[EATEN_BLACK] = 0;
-		weights[MANHATTAN_DISTANCE] = 0;
-		weights[WHITE_ADJ_KING] = 0;
+		weights = new double[9];
+		weights[WHITE_WIN] = 10000;
+		weights[BLACK_WIN] = -10000;
+		weights[EATEN_BLACK] = 1000;
+		weights[MANHATTAN_DISTANCE] = -1000;
+		weights[WHITE_ADJ_KING] = -500;
 		weights[DRAW] = 0;
-		weights[EATEN_WHITE] = 0;
-		weights[BLACK_ADJ_KING] = 0;
+		weights[EATEN_WHITE] = -1000;
+		weights[BLACK_ADJ_KING] = -200;
+		weights[WHITE_IN_WINNIG_TILES] = -3000;
 	}
 	
 	@Override
 	public float getValue(State oldState, State newState) {
 		double value =
-			weights[WHITE_WIN]			* isWhiteWin(newState)	+
-			weights[BLACK_WIN]			* isBlackWin(newState)	+
-			weights[EATEN_BLACK]		* getEatenPawns(oldState, newState, Pawn.BLACK)	+
-			weights[MANHATTAN_DISTANCE]	* getMinManhattanDistanceFromKingToWin(newState)+
-			weights[WHITE_ADJ_KING]		* getPawnsAdjacentToKing(newState, Pawn.WHITE) +
-			weights[DRAW]				* isDraw(newState) +
-			weights[EATEN_WHITE]		* getEatenPawns(oldState, newState, Pawn.WHITE)	+
-			weights[BLACK_ADJ_KING]		* getPawnsAdjacentToKing(newState, Pawn.BLACK);
+			weights[WHITE_WIN]				* isWhiteWin(newState)	+
+			weights[BLACK_WIN]				* isBlackWin(newState)	+
+			weights[EATEN_BLACK]			* getEatenPawns(oldState, newState, Pawn.BLACK)	+
+			weights[MANHATTAN_DISTANCE]		* getMinManhattanDistanceFromKingToWin(newState)+
+			weights[WHITE_ADJ_KING]			* getPawnsAdjacentToKing(newState, Pawn.WHITE) +
+			//weights[DRAW]					* isDraw(newState) +
+			weights[EATEN_WHITE]			* getEatenPawns(oldState, newState, Pawn.WHITE)	+
+			weights[BLACK_ADJ_KING]			* getPawnsAdjacentToKing(newState, Pawn.BLACK) +
+			weights[WHITE_IN_WINNIG_TILES]	* getPawnsInWinCells(newState, Pawn.WHITE);
 		
 		return (float) value;
 	}
@@ -87,6 +70,7 @@ public class TuichuHeuristic implements TablutHeuristic {
 	private double isDraw(State state) {
 		return state.getTurn().equals(Turn.DRAW) ? 1 : 0;
 	}
+	
 	private double getEatenPawns(State oldState, State newState, Pawn color) {
 		if (oldState == null) return 0;		
 		return (double) (oldState.getNumberOf(color) - newState.getNumberOf(color));
@@ -139,6 +123,14 @@ public class TuichuHeuristic implements TablutHeuristic {
 
 	protected float isBlackWin(State state) {
 		return (state.getTurn().equals(Turn.BLACKWIN) ? 1 : 0);
+	}
+	
+	protected int getPawnsInWinCells(State state, Pawn color) {
+		int count = 0;
+		for(Pawn pawn : state.getPawnsInWinCells())
+			if(pawn.equals(color))
+				count++;
+		return count;
 	}
 	
 	// ------------ NOT USED FUNCTIONS -------------
