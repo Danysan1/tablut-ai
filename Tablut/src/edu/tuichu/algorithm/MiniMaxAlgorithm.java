@@ -37,6 +37,7 @@ public class MiniMaxAlgorithm implements TablutAlgorithm {
 					result = actions.get(i);
 					evaluation = minMax(utilities.performMove(state, result), maxDepth, Float.NEGATIVE_INFINITY,
 							Float.POSITIVE_INFINITY);
+					System.out.println("0: "+evaluation+" <-- "+result);
 				} else {
 					float temp = minMax(utilities.performMove(state, actions.get(i)), maxDepth, Float.NEGATIVE_INFINITY,
 							Float.POSITIVE_INFINITY);
@@ -93,18 +94,17 @@ public class MiniMaxAlgorithm implements TablutAlgorithm {
 	}
 	
 	public float minMax(State state, int depth, float alpha, float beta) {
-
+		float ret = 0;
 		Turn turn = state.getTurn();
 		if (depth == 0 || turn.equals(Turn.BLACKWIN) || turn.equals(Turn.DRAW) || turn.equals(Turn.WHITEWIN)) {
-			return evaluate(state);
-		}
-
-		if (turn.equals(Turn.WHITE)) { // MAXIMIZE
-			return maxValue(state, depth, alpha, beta);
+			ret = evaluate(state);
+		} else if (turn.equals(Turn.WHITE)) { // MAXIMIZE
+			ret = maxValue(state, depth, alpha, beta);
 		} else if (turn.equals(Turn.BLACK)) { // MINIMIZE
-			return minValue(state, depth, alpha, beta);
+			ret = minValue(state, depth, alpha, beta);
 		}
-		return 0;
+		//System.out.println(turn+": "+ret+" <-- "+state);
+		return ret;
 	}
 
 	public float minValue(State state, int depth, float alpha, float beta) {
