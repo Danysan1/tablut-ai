@@ -3,6 +3,14 @@ package edu.tuichu.algorithm;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import edu.tuichu.heuristic.TablutHeuristic;
 import edu.tuichu.heuristic.TuichuHeuristic;
@@ -15,6 +23,33 @@ public class MiniMaxAlgorithm implements TablutAlgorithm {
 	private TablutHeuristic heuristic;
 	private Utilities utilities;
 	private int maxDepth;
+	private ExecutorService executor = Executors.newSingleThreadExecutor();
+	
+	public Future<Action> getAction(State state, List<Action> actions) {        
+        return executor.submit(() -> {
+        	//System.out.println("Total possible moves: " + actions.size());
+			Turn turn = state.getTurn();
+			Action result = null;
+			float evaluation = 0;
+	
+			for (int i = 0; i < actions.size(); i++) {
+				if (i == 0) {
+					result = actions.get(i);
+					evaluation = minMax(utilities.performMove(state, result), maxDepth, Float.NEGATIVE_INFINITY,
+							Float.POSITIVE_INFINITY);
+				} else {
+					float temp = minMax(utilities.performMove(state, actions.get(i)), maxDepth, Float.NEGATIVE_INFINITY,
+							Float.POSITIVE_INFINITY);
+					if ((turn.equals(Turn.WHITE) && evaluation <= temp) || (turn.equals(Turn.BLACK) && evaluation >= temp)) {
+						result = actions.get(i);
+						evaluation = temp;
+					}
+				}
+			}
+	
+			return result;
+        });
+    }
 
 	public MiniMaxAlgorithm(int maxDepth, TablutHeuristic heuristic) {
 		this.heuristic = heuristic;
@@ -37,32 +72,25 @@ public class MiniMaxAlgorithm implements TablutAlgorithm {
 		if(actions.size() == 0)
 			throw new RuntimeException("No possible moves available");
 
-		System.out.println("Total possible moves: " + actions.size());
-		Turn turn = state.getTurn();
+		//System.out.println("Total possible moves: " + actions.size());
 		Action result = null;
-		float evaluation = 0;
-
-		for (int i = 0; i < actions.size(); i++) {
-			if (i == 0) {
-				result = actions.get(i);
-				evaluation = minMax(utilities.performMove(state, result), maxDepth, Float.NEGATIVE_INFINITY,
-						Float.POSITIVE_INFINITY);
-			} else {
-				float temp = minMax(utilities.performMove(state, actions.get(i)), maxDepth, Float.NEGATIVE_INFINITY,
-						Float.POSITIVE_INFINITY);
-				if (turn.equals(Turn.WHITE) && evaluation <= temp) {
-					result = actions.get(i);
-					evaluation = temp;
-				} else if (turn.equals(Turn.BLACK) && evaluation >= temp) {
-					result = actions.get(i);
-					evaluation = temp;
-				}
-			}
+		Future<Action> f = getAction(state,actions);
+		try{
+			result = f.get(55, TimeUnit.SECONDS);
+		}catch(TimeoutException e) {
+			System.err.println("Timeout raggiunto.");
+			int i = (new Random()).nextInt(actions.size());
+			result = actions.get(i);
+		} catch(Exception e) {
+			System.err.println("Eccezione inattesa:");
+			e.printStackTrace(System.err);
+			int i = (new Random()).nextInt(actions.size());
+			result = actions.get(i);
 		}
 
 		return result;
 	}
-
+	
 	public float minMax(State state, int depth, float alpha, float beta) {
 
 		Turn turn = state.getTurn();
