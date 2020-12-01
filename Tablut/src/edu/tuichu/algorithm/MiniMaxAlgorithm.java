@@ -43,6 +43,7 @@ public class MiniMaxAlgorithm implements TablutAlgorithm {
 					if ((turn.equals(Turn.WHITE) && evaluation <= temp) || (turn.equals(Turn.BLACK) && evaluation >= temp)) {
 						result = actions.get(i);
 						evaluation = temp;
+						System.out.println(evaluation+" <= "+result);
 					}
 				}
 			}
