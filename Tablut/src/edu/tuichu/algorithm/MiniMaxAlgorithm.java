@@ -27,7 +27,7 @@ public class MiniMaxAlgorithm implements TablutAlgorithm {
 	
 	public Future<Action> getAction(State state, List<Action> actions) {        
         return executor.submit(() -> {
-        	System.out.println("Total possible moves: " + actions.size());
+        	//System.out.println("Total possible moves: " + actions.size());
 			Turn turn = state.getTurn();
 			Action result = null;
 			float evaluation = 0;
@@ -72,7 +72,7 @@ public class MiniMaxAlgorithm implements TablutAlgorithm {
 		if(actions.size() == 0)
 			throw new RuntimeException("No possible moves available");
 
-		System.out.println("Total possible moves: " + actions.size());
+		//System.out.println("Total possible moves: " + actions.size());
 		Action result = null;
 		Future<Action> f = getAction(state,actions);
 		try{
@@ -218,5 +218,5 @@ public class MiniMaxAlgorithm implements TablutAlgorithm {
 
 		return result;
 	}
-	
+
 }
