@@ -36,6 +36,8 @@ public class TuichuHeuristic extends WeightedHeuristic {
 		map.put(FactorType.EATEN_WHITE_PAWNS, getEatenPawns(Pawn.WHITE, state));
 		map.put(FactorType.EATEN_BLACK_PAWNS, getEatenPawns(Pawn.BLACK, state));
 		map.put(FactorType.DISTANCE_TO_WIN, getMinManhattanDistanceFromKingToWin(state));
+		map.put(FactorType.WHITE_PAWNS_IN_WIN_CELLS, getPawnsInWinCells(Pawn.WHITE, state));
+		map.put(FactorType.BLACK_PAWNS_IN_WIN_CELLS, getPawnsInWinCells(Pawn.BLACK, state));
 		map.put(FactorType.WHITE_PAWNS_ADJACENT_TO_KING, getPawnsAdjacentToKing(Pawn.WHITE, state));
 		map.put(FactorType.BLACK_PAWNS_ADJACENT_TO_KING, getPawnsAdjacentToKing(Pawn.BLACK, state));
 		map.put(FactorType.WHITE_AROUND_KING, getPawnsAroundKing(Pawn.WHITE, state));
@@ -85,6 +87,14 @@ public class TuichuHeuristic extends WeightedHeuristic {
 				min = distance;
 		}
 		return min;
+	}
+
+	protected float getPawnsInWinCells(Pawn playerOwningThePawns, State state) {
+		int count = 0;
+		for(Pawn pawn : state.getPawnsInWinCells())
+			if(pawn.equals(playerOwningThePawns))
+				count++;
+		return count;
 	}
 
 	protected float getPawnsAdjacentToKing(Pawn playerOwningThePawns, State state) {
