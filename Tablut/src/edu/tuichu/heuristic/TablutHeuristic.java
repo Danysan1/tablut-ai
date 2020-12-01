@@ -9,5 +9,5 @@ public interface TablutHeuristic {
 	 * @param state The current state
 	 * @return The heuristic value
 	 */
-	public float getValue(State state);
+	public float getValue(State oldState, State newState);
 }
