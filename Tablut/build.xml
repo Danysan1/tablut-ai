@@ -29,6 +29,18 @@
             </classpath>
         </java>
     </target>
+    
+    <target name="gui-server">
+        <java classname="it.unibo.ai.didattica.competition.tablut.server.Server" fork="true">
+            <arg value="-g"/>
+            <classpath>
+                <pathelement location="lib/gson-2.2.2.jar"/>
+                <pathelement location="lib/commons-cli-1.4.jar"/>
+                <pathelement location="build"/>
+            </classpath>
+        </java>
+    </target>
+
     <target name="randomwhite">
         <java classname="it.unibo.ai.didattica.competition.tablut.client.TablutRandomWhiteClient" fork="true">
             <classpath>
