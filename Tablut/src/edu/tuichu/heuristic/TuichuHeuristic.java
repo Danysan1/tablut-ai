@@ -8,6 +8,16 @@ import it.unibo.ai.didattica.competition.tablut.domain.State.Pawn;
 import it.unibo.ai.didattica.competition.tablut.domain.State.Turn;
 
 public class TuichuHeuristic extends WeightedHeuristic {
+	private static final int[][] winningPos = {
+		{0, 1}, {0, 2},
+		{0, 6}, {0, 7},
+		{1, 0}, {2, 0},
+		{1, 8}, {2, 8},
+		{6, 0}, {7, 0}, 
+		{6, 8}, {7, 8},
+		{8, 1}, {8, 2},
+		{8, 6}, {8, 7}
+	};
 
 	public TuichuHeuristic(Map<FactorType, Integer> weights) {
 		super(weights);
@@ -69,8 +79,6 @@ public class TuichuHeuristic extends WeightedHeuristic {
 		int y = valueholder[1];
 		int min = 6; //max value, since distance can never reach 50
 		int distance;
-		int[][] winningPos = new int[16][2];
-		winningPos = state.getWinningPos().clone();
 		for (int i=0; i<16; i++){
 			distance = Math.abs(x-winningPos[i][0]) + Math.abs(y-winningPos[i][1]);
 			if (min > distance)
