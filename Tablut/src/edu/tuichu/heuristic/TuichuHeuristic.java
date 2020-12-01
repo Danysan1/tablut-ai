@@ -32,7 +32,7 @@ public class TuichuHeuristic extends WeightedHeuristic {
 		Map<FactorType, Float> map = new HashMap<>();
 		map.put(FactorType.WHITEWIN, isWhiteWin(state));
 		map.put(FactorType.BLACKWIN, isBlackWin(state));
-		//map.put(FactorType.KING_IN_CASTLE, isKingInCastle(state));
+		map.put(FactorType.KING_IN_CASTLE, isKingInCastle(state));
 		map.put(FactorType.EATEN_WHITE_PAWNS, getEatenPawns(Pawn.WHITE, state));
 		map.put(FactorType.EATEN_BLACK_PAWNS, getEatenPawns(Pawn.BLACK, state));
 		map.put(FactorType.DISTANCE_TO_WIN, getMinManhattanDistanceFromKingToWin(state));
@@ -84,11 +84,7 @@ public class TuichuHeuristic extends WeightedHeuristic {
 			if (min > distance)
 				min = distance;
 		}
-
-		//double m_nrm = ((double)min - 1.0)/(13.0 - 1.0);
-		//double m_std = 1.0 - m_nrm;
-		//return (float)m_std;
-		return (float)6 - min;
+		return min;
 	}
 
 	protected float getPawnsAdjacentToKing(Pawn playerOwningThePawns, State state) {

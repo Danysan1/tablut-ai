@@ -3,7 +3,7 @@ package edu.tuichu.heuristic;
 public enum FactorType {
 	WHITEWIN,
 	BLACKWIN,
-	//KING_IN_CASTLE,
+	KING_IN_CASTLE,
 	EATEN_WHITE_PAWNS,
 	EATEN_BLACK_PAWNS,
 	DISTANCE_TO_WIN,
