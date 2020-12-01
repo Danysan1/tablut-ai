@@ -40,10 +40,10 @@ public class MiniMaxAlgorithm implements TablutAlgorithm {
 				} else {
 					float temp = minMax(utilities.performMove(state, actions.get(i)), maxDepth, Float.NEGATIVE_INFINITY,
 							Float.POSITIVE_INFINITY);
-					if ((turn.equals(Turn.WHITE) && evaluation <= temp) || (turn.equals(Turn.BLACK) && evaluation >= temp)) {
+					if ((turn.equals(Turn.WHITE) && evaluation < temp) || (turn.equals(Turn.BLACK) && evaluation > temp)) {
 						result = actions.get(i);
 						evaluation = temp;
-						System.out.println(evaluation+" <= "+result);
+						System.out.println(i+": "+evaluation+" <-- "+result);
 					}
 				}
 			}
