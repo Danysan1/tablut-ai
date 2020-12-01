@@ -38,8 +38,9 @@ public class TuichuHeuristic extends WeightedHeuristic {
 	private Float getPawnsAroundKing(Pawn pawn, State state) {
 		double around = (double) (getPawnsInKingsColumn(pawn, state) + getPawnsInKingsRow(pawn, state));
 		
-		double a_nrm = around/4.0;
-		return (float)a_nrm;
+		//double a_nrm = around/4.0;
+		//return (float)a_nrm;
+		return (float)around;
 	}
 
 	protected float isWhiteWin(State state) {
@@ -57,15 +58,16 @@ public class TuichuHeuristic extends WeightedHeuristic {
 	protected float getEatenPawns(Pawn pawn, State state) {
 		float total = 8 * (pawn.equals(Pawn.BLACK) ? 2 : 1);
 		float eaten = total - (float) state.getNumberOf(pawn);
-		float e_nrm = (eaten)/(float)8;
-		return e_nrm;
+		//float e_nrm = (eaten)/(float)8;
+		//return e_nrm;
+		return eaten;
 	}
 
 	protected float getMinManhattanDistanceFromKingToWin(State state) {
 		int[] valueholder = state.getKingPosition().clone();
 		int x = valueholder[0];
 		int y = valueholder[1];
-		int min = 50; //max value, since distance can never reach 50
+		int min = 6; //max value, since distance can never reach 50
 		int distance;
 		int[][] winningPos = new int[16][2];
 		winningPos = state.getWinningPos().clone();
@@ -75,9 +77,10 @@ public class TuichuHeuristic extends WeightedHeuristic {
 				min = distance;
 		}
 
-		double m_nrm = ((double)min - 1.0)/(13.0 - 1.0);
-		double m_std = 1.0 - m_nrm;
-		return (float)m_std;
+		//double m_nrm = ((double)min - 1.0)/(13.0 - 1.0);
+		//double m_std = 1.0 - m_nrm;
+		//return (float)m_std;
+		return (float)6 - min;
 	}
 
 	protected float getPawnsAdjacentToKing(Pawn playerOwningThePawns, State state) {

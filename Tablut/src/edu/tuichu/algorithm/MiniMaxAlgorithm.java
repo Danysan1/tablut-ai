@@ -80,26 +80,32 @@ public class MiniMaxAlgorithm implements TablutAlgorithm {
 
 	public float minValue(State state, int depth, float alpha, float beta) {
 		float minEval = Float.POSITIVE_INFINITY;
+		float b = beta;
 		for (State s : getSuccessors(state)) {
-			float eval = minMax(s, depth - 1, alpha, beta);
+			float eval = minMax(s, depth - 1, alpha, b);
 			minEval = Float.min(eval, minEval);
-			beta = Float.min(beta, eval);
+			/*beta = Float.min(beta, eval);
 			if (beta <= alpha) {
 				break;
-			}
+			}*/
+			if (minEval <= alpha) return minEval;
+			b = Float.min(b, minEval);
 		}
 		return minEval;
 	}
 
 	public float maxValue(State state, int depth, float alpha, float beta) {
 		float maxEval = Float.NEGATIVE_INFINITY;
+		float a = alpha;
 		for (State s : getSuccessors(state)) {
-			float eval = minMax(s, depth - 1, alpha, beta);
+			float eval = minMax(s, depth - 1, a, beta);
 			maxEval = Float.max(eval, maxEval);
-			alpha = Float.max(alpha, eval);
+			/*alpha = Float.max(alpha, eval);
 			if (beta <= alpha) {
 				break;
-			}
+			}*/
+			if (maxEval >= beta) return maxEval;
+			a = Float.max(a, maxEval);
 		}
 		return maxEval;
 	}
