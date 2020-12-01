@@ -8,6 +8,7 @@ import it.unibo.ai.didattica.competition.tablut.domain.State.Pawn;
 import it.unibo.ai.didattica.competition.tablut.domain.State.Turn;
 
 public class TuichuHeuristic implements TablutHeuristic {
+	
 	private static final int[][] winningPos = {
 		{0, 1}, {0, 2},
 		{0, 6}, {0, 7},
@@ -64,7 +65,6 @@ public class TuichuHeuristic implements TablutHeuristic {
 		weights[DRAW] = 0;
 		weights[EATEN_WHITE] = 0;
 		weights[BLACK_ADJ_KING] = 0;
-		
 	}
 	
 	@Override
@@ -82,10 +82,13 @@ public class TuichuHeuristic implements TablutHeuristic {
 		return (float) value;
 	}
 	
+	// FUNZIONI DI ANALISI
+	
 	private double isDraw(State state) {
 		return state.getTurn().equals(Turn.DRAW) ? 1 : 0;
 	}
 	private double getEatenPawns(State oldState, State newState, Pawn color) {
+		if (oldState == null) return 0;		
 		return (double) (oldState.getNumberOf(color) - newState.getNumberOf(color));
 	}
 	
@@ -130,9 +133,15 @@ public class TuichuHeuristic implements TablutHeuristic {
 		return (double) min;
 	}
 	
+	protected float isWhiteWin(State state) {
+		return (state.getTurn().equals(Turn.WHITEWIN) ? 1 : 0);
+	}
+
+	protected float isBlackWin(State state) {
+		return (state.getTurn().equals(Turn.BLACKWIN) ? 1 : 0);
+	}
 	
-	
-	// FUNZIONI DI ANALISI
+	// ------------ NOT USED FUNCTIONS -------------
 	
 	private Float getPawnsAroundKing(Pawn pawn, State state) {
 		double around = (double) (getPawnsInKingsColumn(pawn, state) + getPawnsInKingsRow(pawn, state));
@@ -140,14 +149,6 @@ public class TuichuHeuristic implements TablutHeuristic {
 		//double a_nrm = around/4.0;
 		//return (float)a_nrm;
 		return (float)around;
-	}
-
-	protected float isWhiteWin(State state) {
-		return (state.getTurn().equals(Turn.WHITEWIN) ? 1 : 0);
-	}
-
-	protected float isBlackWin(State state) {
-		return (state.getTurn().equals(Turn.BLACKWIN) ? 1 : 0);
 	}
 
 	protected float isKingInCastle(State state) {
@@ -161,10 +162,6 @@ public class TuichuHeuristic implements TablutHeuristic {
 		//return e_nrm;
 		return eaten;
 	}
-
-	
-
-	
 
 	protected float getPawnsInKingsRow(Pawn playerOwningThePawns, State state) {
 		int x,y;
@@ -209,7 +206,5 @@ public class TuichuHeuristic implements TablutHeuristic {
 		}
         return (float) count;
 	}
-
-	
 	
 }
