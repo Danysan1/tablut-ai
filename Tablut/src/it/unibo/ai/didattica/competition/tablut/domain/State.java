@@ -160,21 +160,6 @@ public abstract class State {
 		return out;
 	}
 
-	public int[] getKingPosition(){
-		int x=0, y=0;
-                for(int i=0; i<9; i++) {
-                        for(int j=0; j<9; j++) {
-                                if(this.getPawn(i, j).equals(Pawn.KING)) {
-                                        x = i;
-                                        y = j;
-                                        break;
-                                }
-                        }
-                }
-		int[] valueholder = {x,y}; //return an array containing the position of the king
-		return valueholder;
-	}
-
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)

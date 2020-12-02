@@ -29,22 +29,27 @@ public class MiniMaxAlgorithm implements TablutAlgorithm {
         return executor.submit(() -> {
         	//System.out.println("Total possible moves: " + actions.size());
 			Turn turn = state.getTurn();
-			Action result = null;
+			Action result = actions.get(0);
 			float evaluation = 0;
+			if (turn.equals(Turn.BLACK)) evaluation = Float.POSITIVE_INFINITY;
+			if (turn.equals(Turn.WHITE)) evaluation = Float.NEGATIVE_INFINITY;
 	
-			for (int i = 0; i < actions.size(); i++) {
-				if (i == 0) {
-					result = actions.get(i);
-					evaluation = minMax(null, utilities.performMove(state, result), maxDepth, Float.NEGATIVE_INFINITY,
-							Float.POSITIVE_INFINITY);
-				} else {
-					float temp = minMax(null, utilities.performMove(state, actions.get(i)), maxDepth, Float.NEGATIVE_INFINITY,
-							Float.POSITIVE_INFINITY);
-					if ((turn.equals(Turn.WHITE) && evaluation <= temp) || (turn.equals(Turn.BLACK) && evaluation >= temp)) {
-						result = actions.get(i);
+			for (Action action : actions) {
+				float temp = minMax(utilities.performMove(state, action), maxDepth,
+						Float.NEGATIVE_INFINITY, Float.POSITIVE_INFINITY);
+				
+				if (turn.equals(Turn.WHITE))
+					if (temp > evaluation) {
 						evaluation = temp;
+						result = action;
 					}
-				}
+				
+				if (turn.equals(Turn.BLACK))
+					if (temp < evaluation) {
+						evaluation = temp;
+						result = action;
+					}
+				
 			}
 	
 			return result;
@@ -63,11 +68,6 @@ public class MiniMaxAlgorithm implements TablutAlgorithm {
 
 	@Override
 	public Action getAction(State state) {
-		Action a = makeDecision(state);
-		return a;
-	}
-
-	public Action makeDecision(State state) {
 		List<Action> actions = getPossibleMoves(state);
 		if(actions.size() == 0)
 			throw new RuntimeException("No possible moves available");
@@ -91,41 +91,43 @@ public class MiniMaxAlgorithm implements TablutAlgorithm {
 		return result;
 	}
 	
-	public float minMax(State oldState, State newState, int depth, float alpha, float beta) {
+	private float minMax(State state, int depth, float alpha, float beta) {
 
-		Turn turn = newState.getTurn();
+		Turn turn = state.getTurn();
 		if (depth == 0 || turn.equals(Turn.BLACKWIN) || turn.equals(Turn.DRAW) || turn.equals(Turn.WHITEWIN)) {
-			return evaluate(oldState, newState);
+			return evaluate(state);
 		}
 
-		if (turn.equals(Turn.WHITE)) return maxValue(newState, depth, alpha, beta);
-		if (turn.equals(Turn.BLACK)) return minValue(newState, depth, alpha, beta);
+		if (turn.equals(Turn.WHITE)) return maxValue(state, depth, alpha, beta);
+		if (turn.equals(Turn.BLACK)) return minValue(state, depth, alpha, beta);
 		
 		return 0;
 	}
 
-	public float minValue(State state, int depth, float alpha, float beta) {
-		float minEval = Float.POSITIVE_INFINITY;
+	private float minValue(State state, int depth, float alpha, float beta) {
+		float v = Float.POSITIVE_INFINITY;
 		float b = beta;
 		for (State s : getSuccessors(state)) {
-			float eval = minMax(state, s, depth - 1, alpha, b);
-			minEval = Float.min(eval, minEval);
-			if (minEval <= alpha) return minEval;
-			b = Float.min(b, minEval);
+			float eval = minMax(s, depth - 1, alpha, b);
+			v = Float.min(eval, v);
+			
+			if (v <= alpha) return v;
+			b = Float.min(b, v);
 		}
-		return minEval;
+		return v;
 	}
 
-	public float maxValue(State state, int depth, float alpha, float beta) {
-		float maxEval = Float.NEGATIVE_INFINITY;
+	private float maxValue(State state, int depth, float alpha, float beta) {
+		float v = Float.NEGATIVE_INFINITY;
 		float a = alpha;
 		for (State s : getSuccessors(state)) {
-			float eval = minMax(state, s, depth - 1, a, beta);
-			maxEval = Float.max(eval, maxEval);
-			if (maxEval >= beta) return maxEval;
-			a = Float.max(a, maxEval);
+			float eval = minMax(s, depth - 1, a, beta);
+			v = Float.max(eval, v);
+			
+			if (v >= beta) return v;
+			a = Float.max(a, v);
 		}
-		return maxEval;
+		return v;
 	}
 
 	private List<State> getSuccessors(State state) {
@@ -165,8 +167,8 @@ public class MiniMaxAlgorithm implements TablutAlgorithm {
 		return actions;
 	}
 
-	private float evaluate(State oldState, State newState) {
-		return heuristic.getValue(oldState, newState);
+	private float evaluate(State state) {
+		return heuristic.getValue(state);
 	}
 
 	private String getBox(int row, int column) {
@@ -208,5 +210,23 @@ public class MiniMaxAlgorithm implements TablutAlgorithm {
 
 		return result;
 	}
+	
+	private class ActionEvaluation {
+		private Action action;
+		private float evaluation;
+		
+		public ActionEvaluation (Action action, float value) {
+			this.action = action;
+			this.evaluation = value;
+		}
+		
+		public Action getAction() {
+			return action;
+		}
 
+		public float getEvaluation() {
+			return evaluation;
+		}
+
+	}
 }

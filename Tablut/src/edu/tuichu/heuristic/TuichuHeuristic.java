@@ -19,6 +19,12 @@ public class TuichuHeuristic implements TablutHeuristic {
 		{8, 1}, {8, 2},
 		{8, 6}, {8, 7}
 	};
+	
+	private static final int[][] borders = {
+			{0,0},{0,1},{0,2},{0,3},{0,4},{0,5},{0,6},{0,7},{0,8},
+			{1,0},{1,8}, {2,0},{2,8}, {3,0},{3,8}, {4,0},{4,8}, {5,0},{5,8}, {6,0},{6,8},{7,0},{7,8},
+			{8,0},{8,1},{8,2},{8,3},{8,4},{8,5},{8,6},{8,7},{8,8}
+	};
 
 	private static final int WHITE_WIN = 0;
 	private static final int BLACK_WIN = 1;
@@ -29,6 +35,7 @@ public class TuichuHeuristic implements TablutHeuristic {
 	private static final int EATEN_WHITE = 6;
 	private static final int BLACK_ADJ_KING = 7;
 	private static final int WHITE_IN_WINNIG_TILES = 8;
+	private static final int WHITE_IN_BORDERS = 9;
 	
 	private double[] weights;
 	
@@ -37,30 +44,32 @@ public class TuichuHeuristic implements TablutHeuristic {
 	}
 	
 	private void initWeights() {
-		weights = new double[9];
-		weights[WHITE_WIN] = 10000;
-		weights[BLACK_WIN] = -10000;
-		weights[EATEN_BLACK] = 1000;
-		weights[MANHATTAN_DISTANCE] = -1000;
-		weights[WHITE_ADJ_KING] = -500;
+		weights = new double[10];
+		weights[WHITE_WIN] = 20000;
+		weights[BLACK_WIN] = -20000;
+		weights[EATEN_BLACK] = 800; // max 6400
+		weights[MANHATTAN_DISTANCE] = -500; // max -2400
+		weights[WHITE_ADJ_KING] = -10; // max -400
 		weights[DRAW] = 0;
 		weights[EATEN_WHITE] = -1000;
-		weights[BLACK_ADJ_KING] = -200;
-		weights[WHITE_IN_WINNIG_TILES] = -3000;
+		weights[BLACK_ADJ_KING] = -4000;
+		weights[WHITE_IN_WINNIG_TILES] = -100;
+		weights[WHITE_IN_BORDERS] = -5000;
 	}
 	
 	@Override
-	public float getValue(State oldState, State newState) {
+	public float getValue(State state) {
 		double value =
-			weights[WHITE_WIN]				* isWhiteWin(newState)	+
-			weights[BLACK_WIN]				* isBlackWin(newState)	+
-			weights[EATEN_BLACK]			* getEatenPawns(oldState, newState, Pawn.BLACK)	+
-			weights[MANHATTAN_DISTANCE]		* getMinManhattanDistanceFromKingToWin(newState)+
-			weights[WHITE_ADJ_KING]			* getPawnsAdjacentToKing(newState, Pawn.WHITE) +
+			weights[WHITE_WIN]				* isWhiteWin(state)	+
+			weights[BLACK_WIN]				* isBlackWin(state)	+
+			weights[EATEN_BLACK]			* getEatenPawns(state, Pawn.BLACK)	+
+			weights[MANHATTAN_DISTANCE]		* getMinManhattanDistanceFromKingToWin(state)+
+			weights[WHITE_ADJ_KING]			* getPawnsAdjacentToKing(state, Pawn.WHITE) +
 			//weights[DRAW]					* isDraw(newState) +
-			weights[EATEN_WHITE]			* getEatenPawns(oldState, newState, Pawn.WHITE)	+
-			weights[BLACK_ADJ_KING]			* getPawnsAdjacentToKing(newState, Pawn.BLACK) +
-			weights[WHITE_IN_WINNIG_TILES]	* getPawnsInWinCells(newState, Pawn.WHITE);
+			weights[EATEN_WHITE]			* getEatenPawns(state, Pawn.WHITE)	+
+			weights[BLACK_ADJ_KING]			* getPawnsAdjacentToKing(state, Pawn.BLACK) +
+			//weights[WHITE_IN_WINNIG_TILES]	* getPawnsInWinCells(newState, Pawn.WHITE) +
+			weights[WHITE_IN_BORDERS]		* getPawnsInBorders(state, Pawn.WHITE);
 		
 		return (float) value;
 	}
@@ -71,14 +80,14 @@ public class TuichuHeuristic implements TablutHeuristic {
 		return state.getTurn().equals(Turn.DRAW) ? 1 : 0;
 	}
 	
-	private double getEatenPawns(State oldState, State newState, Pawn color) {
-		if (oldState == null) return 0;		
-		return (double) (oldState.getNumberOf(color) - newState.getNumberOf(color));
+	private double getEatenPawns(State state, Pawn color) {
+		int total = color.equals(Pawn.WHITE) ? 16 : 8;
+		return (double) (total - state.getNumberOf(color));
 	}
 	
 	private double getPawnsAdjacentToKing(State state, Pawn color) {
 		int count = 0;
-		int[] kingPosition = state.getKingPosition();
+		int[] kingPosition = getKingPosition(state);
 		final int
 			x = kingPosition[0],
 			y = kingPosition[1],
@@ -103,7 +112,7 @@ public class TuichuHeuristic implements TablutHeuristic {
 	
 	// TODO check if there are pawns in the path or implement function with possible paths
 	protected double getMinManhattanDistanceFromKingToWin(State state) {
-		int[] valueholder = state.getKingPosition().clone();
+		int[] valueholder = getKingPosition(state).clone();
 		int x = valueholder[0];
 		int y = valueholder[1];
 		int min = 10; //max value, since distance can never reach 50
@@ -125,12 +134,24 @@ public class TuichuHeuristic implements TablutHeuristic {
 		return (state.getTurn().equals(Turn.BLACKWIN) ? 1 : 0);
 	}
 	
-	protected int getPawnsInWinCells(State state, Pawn color) {
+	protected float getPawnsInWinCells(State state, Pawn color) {
 		int count = 0;
 		for(Pawn pawn : state.getPawnsInWinCells())
 			if(pawn.equals(color))
 				count++;
-		return count;
+		return (float)count;
+	}
+	
+	private float getPawnsInBorders(State state, Pawn color) {
+		int count = 0;
+		Pawn[][] board = state.getBoard();
+		
+		for (int[] i : borders) {
+			int x = i[0], y = i[1];
+			if(board[x][y].equals(color))
+				count++;
+		}
+		return (float)count;
 	}
 	
 	// ------------ NOT USED FUNCTIONS -------------
@@ -158,7 +179,7 @@ public class TuichuHeuristic implements TablutHeuristic {
 	protected float getPawnsInKingsRow(Pawn playerOwningThePawns, State state) {
 		int x,y;
 		int count=0;
-		int[] valueholder = state.getKingPosition();
+		int[] valueholder = getKingPosition(state);
 		x = valueholder[0];
 		y = valueholder[1];
 		for (int i=x+1; i<9; i++){
@@ -181,7 +202,7 @@ public class TuichuHeuristic implements TablutHeuristic {
 	protected float getPawnsInKingsColumn(Pawn playerOwningThePawns, State state) {
         int x,y;
         int count=0;
-        int[] valueholder = state.getKingPosition();
+        int[] valueholder = getKingPosition(state);
         x = valueholder[0];
         y = valueholder[1];
         for (int i=y+1; i<9; i++){
@@ -199,4 +220,16 @@ public class TuichuHeuristic implements TablutHeuristic {
         return (float) count;
 	}
 	
+	private int[] getKingPosition(State state){
+		int x=0, y=0;
+            for(int i=0; i<9; i++)
+                for(int j=0; j<9; j++)
+                        if(state.getPawn(i, j).equals(Pawn.KING)) {
+                                x = i;
+                                y = j;
+                                break;
+                        }
+		int[] valueholder = {x,y}; //return an array containing the position of the king
+		return valueholder;
+	}
 }

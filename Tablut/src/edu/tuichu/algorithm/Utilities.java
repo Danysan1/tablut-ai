@@ -30,6 +30,48 @@ public class Utilities {
 		this.citadels.add("e8");
 	}
 	
+	public State performMove(State state, Action a) {
+		// se sono arrivato qui, muovo la pedina
+		state = this.movePawn(state, a);
+
+		// a questo punto controllo lo stato per eventuali catture
+		if (state.getTurn().equalsTurn("W")) {
+			state = this.checkCaptureBlack(state, a);
+		} else if (state.getTurn().equalsTurn("B")) {
+			state = this.checkCaptureWhite(state, a);
+		}
+
+		//System.out.println("Stato_Utilities:\n" + state.toString());
+		//System.out.println("Utilities::performMove: "+a);
+
+		return state;
+	}
+	
+	private State movePawn(State state, Action a) {
+		State.Pawn pawn = state.getPawn(a.getRowFrom(), a.getColumnFrom());
+		State.Pawn[][] newBoard = state.getBoard();
+		// State newState = new State();
+		// libero il trono o una casella qualunque
+		if (a.getColumnFrom() == 4 && a.getRowFrom() == 4) {
+			newBoard[a.getRowFrom()][a.getColumnFrom()] = State.Pawn.THRONE;
+		} else {
+			newBoard[a.getRowFrom()][a.getColumnFrom()] = State.Pawn.EMPTY;
+		}
+
+		// metto nel nuovo tabellone la pedina mossa
+		newBoard[a.getRowTo()][a.getColumnTo()] = pawn;
+		// aggiorno il tabellone
+		state.setBoard(newBoard);
+		// cambio il turno
+		if (state.getTurn().equalsTurn(State.Turn.WHITE.toString())) {
+			state.setTurn(State.Turn.BLACK);
+		} else {
+			state.setTurn(State.Turn.WHITE);
+		}
+
+		return state;
+	}
+
 	public boolean checkMove(State state, Action a) {
 		int columnFrom = a.getColumnFrom();
 		int columnTo = a.getColumnTo();
@@ -156,23 +198,6 @@ public class Utilities {
 			}
 		}
 		return true;
-	}
-
-	public State performMove(State state, Action a) {
-		// se sono arrivato qui, muovo la pedina
-		state = this.movePawn(state, a);
-
-		// a questo punto controllo lo stato per eventuali catture
-		if (state.getTurn().equalsTurn("W")) {
-			state = this.checkCaptureBlack(state, a);
-		} else if (state.getTurn().equalsTurn("B")) {
-			state = this.checkCaptureWhite(state, a);
-		}
-
-		//System.out.println("Stato_Utilities:\n" + state.toString());
-		//System.out.println("Utilities::performMove: "+a);
-
-		return state;
 	}
 	
 	private State checkCaptureWhite(State state, Action a) {
@@ -486,31 +511,6 @@ public class Utilities {
 		this.checkCaptureBlackKingUp(state, a);
 
 		//this.movesWithutCapturing++;
-		return state;
-	}
-
-	private State movePawn(State state, Action a) {
-		State.Pawn pawn = state.getPawn(a.getRowFrom(), a.getColumnFrom());
-		State.Pawn[][] newBoard = state.getBoard();
-		// State newState = new State();
-		// libero il trono o una casella qualunque
-		if (a.getColumnFrom() == 4 && a.getRowFrom() == 4) {
-			newBoard[a.getRowFrom()][a.getColumnFrom()] = State.Pawn.THRONE;
-		} else {
-			newBoard[a.getRowFrom()][a.getColumnFrom()] = State.Pawn.EMPTY;
-		}
-
-		// metto nel nuovo tabellone la pedina mossa
-		newBoard[a.getRowTo()][a.getColumnTo()] = pawn;
-		// aggiorno il tabellone
-		state.setBoard(newBoard);
-		// cambio il turno
-		if (state.getTurn().equalsTurn(State.Turn.WHITE.toString())) {
-			state.setTurn(State.Turn.BLACK);
-		} else {
-			state.setTurn(State.Turn.WHITE);
-		}
-
 		return state;
 	}
 
