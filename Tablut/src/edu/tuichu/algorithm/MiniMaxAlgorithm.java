@@ -23,6 +23,7 @@ public class MiniMaxAlgorithm implements TablutAlgorithm {
 	private TablutHeuristic heuristic;
 	private Utilities utilities;
 	private int maxDepth;
+	private int timeout;
 	private ExecutorService executor = Executors.newSingleThreadExecutor();
 	
 	public Future<Action> buildActionGetter(State state, List<Action> actions) {        
@@ -53,14 +54,18 @@ public class MiniMaxAlgorithm implements TablutAlgorithm {
         });
     }
 
-	public MiniMaxAlgorithm(int maxDepth, TablutHeuristic heuristic) {
+	public MiniMaxAlgorithm(int maxDepth, TablutHeuristic heuristic, int timeout) {
 		this.heuristic = heuristic;
 		this.utilities = new Utilities();
 		this.maxDepth = maxDepth;
 	}
 
+	public MiniMaxAlgorithm(int maxDepth, TablutHeuristic heuristic) {
+		this(maxDepth, heuristic, 60);
+	}
+
 	public MiniMaxAlgorithm(int maxDepth) {
-		this(maxDepth, new TuichuHeuristic());
+		this(maxDepth, new TuichuHeuristic(), 60);
 	}
 
 	@Override
@@ -73,7 +78,7 @@ public class MiniMaxAlgorithm implements TablutAlgorithm {
 		Action result = null;
 		Future<Action> f = buildActionGetter(state,actions);
 		try{
-			result = f.get(55, TimeUnit.SECONDS);
+			result = f.get(timeout-3, TimeUnit.SECONDS);
 		}catch(TimeoutException e) {
 			System.err.println("Timeout raggiunto.");
 			int i = (new Random()).nextInt(actions.size());

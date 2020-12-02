@@ -128,7 +128,7 @@ public class TuichuTablutClient extends TablutClient {
 		if(this.game != 4)
 			throw new IllegalArgumentException("TuichuTablutClient only supports Ashton rules");
 		//TablutAlgorithm algorithm = new MiniMaxAlgorithm(100, new MockHeuristic());
-		TablutAlgorithm algorithm = new MiniMaxAlgorithm(4, new TuichuHeuristic());
+		TablutAlgorithm algorithm = new MiniMaxAlgorithm(4, new TuichuHeuristic(), getTimeout());
 		
 		List<int[]> pawns = new ArrayList<int[]>();
 		List<int[]> empty = new ArrayList<int[]>();
