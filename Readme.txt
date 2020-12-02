@@ -1,5 +1,5 @@
-Per utilizzare il giocatore Tablut del team Tuichu eseguire:
+To use the Tuichu team player run:
 
 ./tuichu
 
-Lo script accetta i parametri standard
+The script accepts the 3 standard parameters.
