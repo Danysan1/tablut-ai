@@ -1,7 +1,7 @@
 <!-- Le istruzioni su come usare ANT per eseguire il progetto, sono incluse nel file
      di README, nella home del progetto -->
 
-<project name="Tablut">
+<project name="Tablut" default="compile">
 
     <target name="clean">
         <delete dir="build"/>
@@ -66,6 +66,7 @@
             </classpath>
         </java>
     </target>
+
     <target name="tuichublack">
         <java classname="edu.tuichu.TuichuTablutBlackClient" fork="true">
             <classpath>
@@ -74,7 +75,19 @@
             </classpath>
         </java>
     </target>
-	
+
+    <target name="tuichu_jar">
+        <jar destfile="tuichu.jar" filesetmanifest="mergewithoutmain">
+            <manifest>
+                <attribute name="Main-Class" value="edu.tuichu.TuichuTablutClient"/>
+                <attribute name="Class-Path" value="."/>
+            </manifest>
+            <fileset dir="build"/>
+            <zipfileset excludes="META-INF/*.SF" src="lib/gson-2.2.2.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="lib/commons-cli-1.4.jar"/>
+        </jar>
+    </target>
+
     <target name="humanwhite">
         <java classname="it.unibo.ai.didattica.competition.tablut.client.TablutHumanWhiteClient" fork="true">
             <classpath>
