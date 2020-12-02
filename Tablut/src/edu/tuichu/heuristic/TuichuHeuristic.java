@@ -1,8 +1,5 @@
 package edu.tuichu.heuristic;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import it.unibo.ai.didattica.competition.tablut.domain.State;
 import it.unibo.ai.didattica.competition.tablut.domain.State.Pawn;
 import it.unibo.ai.didattica.competition.tablut.domain.State.Turn;
@@ -26,50 +23,32 @@ public class TuichuHeuristic implements TablutHeuristic {
 			{8,0},{8,1},{8,2},{8,3},{8,4},{8,5},{8,6},{8,7},{8,8}
 	};
 
-	private static final int WHITE_WIN = 0;
-	private static final int BLACK_WIN = 1;
-	private static final int EATEN_BLACK = 2;
-	private static final int MANHATTAN_DISTANCE = 3;
-	private static final int WHITE_ADJ_KING = 4;
-	private static final int DRAW = 5;
-	private static final int EATEN_WHITE = 6;
-	private static final int BLACK_ADJ_KING = 7;
-	private static final int WHITE_IN_WINNIG_TILES = 8;
-	private static final int WHITE_IN_BORDERS = 9;
-	
-	private double[] weights;
-	
-	public TuichuHeuristic () {
-		initWeights();
-	}
-	
-	private void initWeights() {
-		weights = new double[10];
-		weights[WHITE_WIN] = 20000;
-		weights[BLACK_WIN] = -20000;
-		weights[EATEN_BLACK] = 800; // max 6400
-		weights[MANHATTAN_DISTANCE] = -500; // max -2400
-		weights[WHITE_ADJ_KING] = -10; // max -400
-		weights[DRAW] = 0;
-		weights[EATEN_WHITE] = -1000;
-		weights[BLACK_ADJ_KING] = -4000;
-		weights[WHITE_IN_WINNIG_TILES] = -100;
-		weights[WHITE_IN_BORDERS] = -5000;
-	}
+	private static final double WHITE_WIN = 20000;
+	private static final double BLACK_WIN = -20000;
+	private static final double EATEN_BLACK = 800;
+	private static final double MANHATTAN_DISTANCE = -500;
+	private static final double WHITE_ADJ_KING = -10;
+	private static final double DRAW = 0;
+	private static final double EATEN_WHITE = -1000;
+	private static final double BLACK_ADJ_KING = -4000;
+	private static final double WHITE_IN_WINNIG_TILES = -100;
+	private static final double WHITE_IN_BORDERS = -5000;
+	private static final double KING_IN_THRONE = -1000;
 	
 	@Override
 	public float getValue(State state) {
 		double value =
-			weights[WHITE_WIN]				* isWhiteWin(state)	+
-			weights[BLACK_WIN]				* isBlackWin(state)	+
-			weights[EATEN_BLACK]			* getEatenPawns(state, Pawn.BLACK)	+
-			weights[MANHATTAN_DISTANCE]		* getMinManhattanDistanceFromKingToWin(state)+
-			weights[WHITE_ADJ_KING]			* getPawnsAdjacentToKing(state, Pawn.WHITE) +
-			//weights[DRAW]					* isDraw(newState) +
-			weights[EATEN_WHITE]			* getEatenPawns(state, Pawn.WHITE)	+
-			weights[BLACK_ADJ_KING]			* getPawnsAdjacentToKing(state, Pawn.BLACK) +
-			//weights[WHITE_IN_WINNIG_TILES]	* getPawnsInWinCells(newState, Pawn.WHITE) +
-			weights[WHITE_IN_BORDERS]		* getPawnsInBorders(state, Pawn.WHITE);
+			WHITE_WIN				* isWhiteWin(state)	+
+			BLACK_WIN				* isBlackWin(state)	+
+			EATEN_BLACK				* getEatenPawns(state, Pawn.BLACK)	+
+			MANHATTAN_DISTANCE		* getMinManhattanDistanceFromKingToWin(state)+
+			WHITE_ADJ_KING			* getPawnsAdjacentToKing(state, Pawn.WHITE) +
+			//DRAW					* isDraw(newState) +
+			EATEN_WHITE				* getEatenPawns(state, Pawn.WHITE)	+
+			BLACK_ADJ_KING			* getPawnsAdjacentToKing(state, Pawn.BLACK) +
+			//WHITE_IN_WINNIG_TILES	* getPawnsInWinCells(newState, Pawn.WHITE) +
+			WHITE_IN_BORDERS		* getPawnsInBorders(state, Pawn.WHITE) +
+			KING_IN_THRONE			* isKingInCastle(state);
 		
 		return (float) value;
 	}
@@ -136,7 +115,7 @@ public class TuichuHeuristic implements TablutHeuristic {
 	
 	protected float getPawnsInWinCells(State state, Pawn color) {
 		int count = 0;
-		for(Pawn pawn : state.getPawnsInWinCells())
+		for(Pawn pawn : getPawnsInWinCells(state))
 			if(pawn.equals(color))
 				count++;
 		return (float)count;
@@ -154,6 +133,20 @@ public class TuichuHeuristic implements TablutHeuristic {
 		return (float)count;
 	}
 	
+	private Pawn[] getPawnsInWinCells(State state){
+		Pawn[] out = {
+			state.getPawn(0, 1), state.getPawn(0, 2), state.getPawn(0, 6), state.getPawn(0, 7),
+			state.getPawn(8, 1), state.getPawn(8, 2), state.getPawn(8, 6), state.getPawn(8, 7),
+			state.getPawn(1, 0), state.getPawn(2, 0), state.getPawn(6, 0), state.getPawn(7, 0),
+			state.getPawn(1, 8), state.getPawn(2, 8), state.getPawn(6, 8), state.getPawn(7, 8)
+		};
+		return out;
+	}
+	
+	protected float isKingInCastle(State state) {
+		return (state.getPawn(4,4).equals(Pawn.KING) ? 1 : 0);
+	}
+	
 	// ------------ NOT USED FUNCTIONS -------------
 	
 	private Float getPawnsAroundKing(Pawn pawn, State state) {
@@ -162,10 +155,6 @@ public class TuichuHeuristic implements TablutHeuristic {
 		//double a_nrm = around/4.0;
 		//return (float)a_nrm;
 		return (float)around;
-	}
-
-	protected float isKingInCastle(State state) {
-		return (state.getPawn(4,4).equals(Pawn.KING) ? 1 : 0);
 	}
 
 	protected float getEatenPawns(Pawn pawn, State state) {

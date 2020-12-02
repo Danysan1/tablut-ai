@@ -150,15 +150,7 @@ public abstract class State {
 		this.turn = turn;
 	}
 
-	public Pawn[] getPawnsInWinCells(){
-		Pawn[] out = {
-			getPawn(0, 1), getPawn(0, 2), getPawn(0, 6), getPawn(0, 7),
-			getPawn(8, 1), getPawn(8, 2), getPawn(8, 6), getPawn(8, 7),
-			getPawn(1, 0), getPawn(2, 0), getPawn(6, 0), getPawn(7, 0),
-			getPawn(1, 8), getPawn(2, 8), getPawn(6, 8), getPawn(7, 8)
-		};
-		return out;
-	}
+	
 
 	@Override
 	public boolean equals(Object obj) {
