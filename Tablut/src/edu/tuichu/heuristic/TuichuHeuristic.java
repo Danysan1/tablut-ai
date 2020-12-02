@@ -9,14 +9,12 @@ import it.unibo.ai.didattica.competition.tablut.domain.State.Turn;
 
 public class TuichuHeuristic implements TablutHeuristic {
 	private static final int[][] winningPos = {
-		{0, 1}, {0, 2},
-		{0, 6}, {0, 7},
-		{1, 0}, {2, 0},
-		{1, 8}, {2, 8},
-		{6, 0}, {7, 0}, 
-		{6, 8}, {7, 8},
-		{8, 1}, {8, 2},
-		{8, 6}, {8, 7}
+		      {0,1},{0,2},{0,6},{0,7},
+		{1,0},                        {1,8},
+		{2,0},                        {2,8},
+		{6,0},                        {6,8},
+		{7,0},                        {7,8},
+		      {8,1},{8,2},{8,6},{8,7}
 	};
 
 	private static final int[][] borders = {
@@ -36,13 +34,13 @@ public class TuichuHeuristic implements TablutHeuristic {
 		BLACK_WIN = -20000,
 		DRAW = 0,
 		KING_IN_CASTLE = 100,
-		EATEN_BLACK_PAWNS = 800,
-		EATEN_WHITE_PAWNS = -800,
+		EATEN_BLACK_PAWNS = 1000,
+		EATEN_WHITE_PAWNS = -1000,
 		MANHATTAN_DISTANCE_TO_WIN = -300, // max -2400
-		WHITE_ADJACENT_TO_KING = -10, // max -400
+		WHITE_ADJACENT_TO_KING = 10, // max 400
 		BLACK_ADJACENT_TO_KING = -1000,
-		WHITE_PAWNS_IN_WIN_CELLS = -100,
-		BLACK_PAWNS_IN_WIN_CELLS = -300,
+		WHITE_PAWNS_IN_WIN_CELLS = -300,
+		BLACK_PAWNS_IN_WIN_CELLS = -500,
 		WHITE_IN_BORDERS = -5000,
 		WHITE_PAWNS_AROUND_KING = -10,
 		BLACK_PAWNS_AROUND_KING = -500;

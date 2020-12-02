@@ -25,7 +25,7 @@ public class MiniMaxAlgorithm implements TablutAlgorithm {
 	private int maxDepth;
 	private ExecutorService executor = Executors.newSingleThreadExecutor();
 	
-	public Future<Action> getAction(State state, List<Action> actions) {        
+	public Future<Action> buildActionGetter(State state, List<Action> actions) {        
         return executor.submit(() -> {
         	//System.out.println("Total possible moves: " + actions.size());
 			Turn turn = state.getTurn();
@@ -71,7 +71,7 @@ public class MiniMaxAlgorithm implements TablutAlgorithm {
 
 		//System.out.println("Total possible moves: " + actions.size());
 		Action result = null;
-		Future<Action> f = getAction(state,actions);
+		Future<Action> f = buildActionGetter(state,actions);
 		try{
 			result = f.get(55, TimeUnit.SECONDS);
 		}catch(TimeoutException e) {
