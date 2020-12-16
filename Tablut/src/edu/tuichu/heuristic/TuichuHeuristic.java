@@ -30,8 +30,8 @@ public class TuichuHeuristic implements TablutHeuristic {
 	};
 
 	private static final float
-		WHITE_WIN = 20000,
-		BLACK_WIN = -20000,
+		WHITE_WIN =  2000000000,
+		BLACK_WIN = -2000000000,
 		DRAW = 0,
 		KING_IN_CASTLE = 100,
 		EATEN_BLACK_PAWNS = 1000,
@@ -104,11 +104,23 @@ public class TuichuHeuristic implements TablutHeuristic {
 	}
 	
 	protected float isWhiteWin(State state) {
-		return (state.getTurn().equals(Turn.WHITEWIN) ? 1 : 0);
+		if(state.getTurn().equals(Turn.WHITEWIN)){
+			//System.out.println("Possible WHITE win:");
+			//System.out.println(state);
+			return 1;
+		} else {
+			return 0;
+		}
 	}
 
 	protected float isBlackWin(State state) {
-		return (state.getTurn().equals(Turn.BLACKWIN) ? 1 : 0);
+		if(state.getTurn().equals(Turn.BLACKWIN)){
+			//System.out.println("Possible BLACK win:");
+			//System.out.println(state);
+			return 1;
+		} else {
+			return 0;
+		}
 	}
 	
 	protected float getPawnsInWinCells(State state, Pawn color) {

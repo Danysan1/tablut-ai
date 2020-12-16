@@ -31,22 +31,24 @@ public class MiniMaxAlgorithm implements TablutAlgorithm {
         	//System.out.println("Total possible moves: " + actions.size());
 			Turn turn = state.getTurn();
 			Action result = actions.get(0);
-			float evaluation = 0;
-			if (turn.equals(Turn.BLACK)) evaluation = Float.POSITIVE_INFINITY;
-			if (turn.equals(Turn.WHITE)) evaluation = Float.NEGATIVE_INFINITY;
+			float resultVal = 0;
+			if (turn.equals(Turn.BLACK)) resultVal = Float.POSITIVE_INFINITY;
+			if (turn.equals(Turn.WHITE)) resultVal = Float.NEGATIVE_INFINITY;
 	
 			for (Action action : actions) {
-				float temp = minMax(
+				float actionVal = minMax(
 						utilities.performMove(state, action),
 						maxDepth,
 						Float.NEGATIVE_INFINITY,
 						Float.POSITIVE_INFINITY
 					);
 				
-				if ((turn.equals(Turn.WHITE) && evaluation < temp) || (turn.equals(Turn.BLACK) && evaluation > temp)) {
-						result = action;
-						evaluation = temp;
-						System.out.println(turn+": "+evaluation+" <-- "+result);
+				if ((turn.equals(Turn.WHITE) && resultVal < actionVal) || (turn.equals(Turn.BLACK) && resultVal > actionVal)) {
+					result = action;
+					resultVal = actionVal;
+					System.out.println(turn+": "+resultVal+" <-- "+result+" => NEW BEST!");
+				} else {
+					//System.out.println(turn+": "+actionVal+" <-- "+action);
 				}
 			}
 	
@@ -58,6 +60,9 @@ public class MiniMaxAlgorithm implements TablutAlgorithm {
 		this.heuristic = heuristic;
 		this.utilities = new Utilities();
 		this.maxDepth = maxDepth;
+		System.out.println("Max depth: "+maxDepth);
+		this.timeout = timeout;
+		System.out.println("Timeout: "+timeout);
 	}
 
 	public MiniMaxAlgorithm(int maxDepth, TablutHeuristic heuristic) {
@@ -98,6 +103,7 @@ public class MiniMaxAlgorithm implements TablutAlgorithm {
 		Turn turn = state.getTurn();
 		if (depth == 0 || turn.equals(Turn.BLACKWIN) || turn.equals(Turn.DRAW) || turn.equals(Turn.WHITEWIN)) {
 			ret = evaluate(state);
+			//System.out.println("ret="+ret);
 		} else if (turn.equals(Turn.WHITE)) { // MAXIMIZE
 			ret = maxValue(state, depth, alpha, beta);
 		} else if (turn.equals(Turn.BLACK)) { // MINIMIZE
